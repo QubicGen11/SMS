@@ -1,0 +1,23 @@
+.Careersmain {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: url("https://res.cloudinary.com/devewerw3/image/upload/v1720423474/DALL_E_2024-07-08_12.49.03_-_A_modern_classroom_with_a_turquoise_wall_a_whiteboard_in_the_center_bookshelves_with_books_and_some_decorative_items_and_desks_arranged_in_rows._Th_t0fgqo.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  
+  /* .Careersmain::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+  }  */
+
+  .blur-bg{
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+  }

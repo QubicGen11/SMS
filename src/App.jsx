@@ -1,15 +1,22 @@
-import React from 'react'
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login_main from "./Components/Login_Components/Login_main";
+import Setup from "./Components/Setup Components/Setup";
+import Setup_two from "./Components/Setup Components/Setup_two";
 
-const App = () => {
+
+export default function App() {
   return (
-    <>
-<div className='flex  justify-center items-center'>
-    <h1 className='text-black font-bold text-3xl'>This is a test</h1>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login_main />} />
+        <Route path="/setup" element={<Setup />} />
+        <Route path="/setuptwo" element={<Setup_two />} />
 
-</div>
-    
-    </>
-  )
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
