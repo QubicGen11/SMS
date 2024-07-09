@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../Modal Components/Modal'; // Adjust the path if necessary
+import StepIndicator from './StepIndicator';
+
+
 
 const SetupThree = () => {
+
+  const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
+  const currentStep = 1; // Set this dynamically as per your logic
   const [showModal, setShowModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -111,24 +117,8 @@ const SetupThree = () => {
         </div>
         <div className="w-full md:w-3/4 p-4 md:p-6 h-full overflow-y-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">Set Up Your Account</h1>
-          <div className="flex justify-evenly mb-8">
-            <div className="flex flex-col items-center">
-              <div className="bg-[#00274D] rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">1</div>
-              <span className="text-xs md:text-base">Organization</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-yellow-500 rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">2</div>
-              <span className="text-xs md:text-base">Create Branch</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-[#00274D] rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">3</div>
-              <span className="text-xs md:text-base">Payment</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-[#00274D] rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">4</div>
-              <span className="text-xs md:text-base">Finish</span>
-            </div>
-          </div>
+          <StepIndicator steps={steps} currentStep={currentStep} />
+
           <div className="text-center text-lg md:text-xl font-bold mb-4">Total No. Of Branches: {branchDetails.length}</div>
           <div className="text-center mb-8">
             <button className="bg-blue-500 text-white px-4 py-2 rounded-full mb-2" onClick={() => setShowModal(true)}>+</button>
@@ -139,6 +129,7 @@ const SetupThree = () => {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
+                  <th className="py-2 px-4 border-b">S.N.O</th>
                   <th className="py-2 px-4 border-b">Branch Name</th>
                   <th className="py-2 px-10 border-b">City</th>
                   <th className="py-2 px-4 border-b">Actions</th>
@@ -147,6 +138,8 @@ const SetupThree = () => {
               <tbody>
                 {branchDetails.map((branch, index) => (
                   <tr key={index}>
+                   <td className="py-2 px-4 border-b text-center">{index+1}</td>
+
                     <td className="py-2 px-4 border-b text-center">{branch.branchName}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.city}</td>
                     <td className="py-2 px-4 border-b text-center">

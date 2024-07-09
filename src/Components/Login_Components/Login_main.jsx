@@ -1,8 +1,11 @@
-import React from 'react';
-import './Login.css';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ForgotPasswordModal from './ForgotModalOne';
+import './Login.css'
 
 const Login_main = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="Careersmain flex justify-center items-center min-h-screen" style={{ backgroundPosition: 'center center' }}>
       <div className="absolute inset-0 bg-black bg-opacity-30"></div>
@@ -23,15 +26,14 @@ const Login_main = () => {
           
           <div className="flex flex-col md:flex-row gap-2 md:gap-6">
             <Link to="/setup" className="text-sm text-white">Register / Sign Up</Link>
-            <a href="#" className="text-sm text-white">Forgot Password ?</a>
+            <a href="#" className="text-sm text-white" onClick={() => setShowModal(true)}>Forgot Password ?</a>
           </div>
 
           <Link to="/setup">
             <button className="bg-blue-500 hover:bg-yellow-600 text-white text-base font-bold px-16 py-2 rounded-2xl">LOG IN</button>
           </Link>
 
-
-          
+          <ForgotPasswordModal showModal={showModal} setShowModal={setShowModal} />
         </div>
       </div>
     </div>
