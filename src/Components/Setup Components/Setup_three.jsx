@@ -15,8 +15,8 @@ const SetupThree = () => {
     city: '',
     state: '',
     pinCode: '',
-    organizationName:'',
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const storedDetails = JSON.parse(localStorage.getItem('branchDetails'));
@@ -28,32 +28,66 @@ const SetupThree = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Remove error for the field being updated
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: '' });
+    }
+  };
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!formData.branchName) formErrors.branchName = "Branch Name is required";
+    if (!formData.mobileNumber) {
+      formErrors.mobileNumber = "Mobile Number is required";
+    } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
+      formErrors.mobileNumber = "Mobile Number is invalid";
+    }
+    if (!formData.email) {
+      formErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      formErrors.email = "Email is invalid";
+    }
+    if (!formData.address) formErrors.address = "Address is required";
+    if (!formData.city) formErrors.city = "City is required";
+    if (!formData.state) formErrors.state = "State is required";
+    if (!formData.pinCode) {
+      formErrors.pinCode = "Pin Code is required";
+    } else if (!/^\d{6}$/.test(formData.pinCode)) {
+      formErrors.pinCode = "Pin Code is invalid";
+    }
+    return formErrors;
   };
 
   const handleSave = (e) => {
     e.preventDefault();
-    let updatedDetails;
-    if (isEditMode) {
-      updatedDetails = branchDetails.map((branch, index) => 
-        index === editIndex ? formData : branch
-      );
-      setIsEditMode(false);
-      setEditIndex(null);
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length === 0) {
+      let updatedDetails;
+      if (isEditMode) {
+        updatedDetails = branchDetails.map((branch, index) => 
+          index === editIndex ? formData : branch
+        );
+        setIsEditMode(false);
+        setEditIndex(null);
+      } else {
+        updatedDetails = [...branchDetails, formData];
+      }
+      setBranchDetails(updatedDetails);
+      localStorage.setItem('branchDetails', JSON.stringify(updatedDetails));
+      setFormData({
+        branchName: '',
+        mobileNumber: '',
+        email: '',
+        address: '',
+        city: '',
+        state: '',
+        pinCode: '',
+      });
+      setShowModal(false);
     } else {
-      updatedDetails = [...branchDetails, formData];
+      setErrors(formErrors);
     }
-    setBranchDetails(updatedDetails);
-    localStorage.setItem('branchDetails', JSON.stringify(updatedDetails));
-    setFormData({
-      branchName: '',
-      mobileNumber: '',
-      email: '',
-      address: '',
-      city: '',
-      state: '',
-      pinCode: '',
-    });
-    setShowModal(false);
   };
 
   const handleEdit = (index) => {
@@ -105,7 +139,7 @@ const SetupThree = () => {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b ">Branch Name</th>
+                  <th className="py-2 px-4 border-b">Branch Name</th>
                   <th className="py-2 px-10 border-b">City</th>
                   <th className="py-2 px-4 border-b">Actions</th>
                 </tr>
@@ -116,12 +150,12 @@ const SetupThree = () => {
                     <td className="py-2 px-4 border-b text-center">{branch.branchName}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.city}</td>
                     <td className="py-2 px-4 border-b text-center">
-                    <button className="text-blue-500 mr-4" onClick={() => handleEdit(index)}>
-  <i className="fas fa-pencil-alt"></i>
-</button>
-<button className="text-red-500" onClick={() => handleDelete(index)}>
-  <i className="fas fa-trash-alt"></i>
-</button>
+                      <button className="text-blue-500 mr-4" onClick={() => handleEdit(index)}>
+                        <i className="fas fa-pencil-alt"></i>
+                      </button>
+                      <button className="text-red-500" onClick={() => handleDelete(index)}>
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -132,7 +166,6 @@ const SetupThree = () => {
             <Link to="/setup">
               <button className="bg-[#00274D] text-white px-4 py-2 rounded-md">Previous</button>
             </Link>
-           
             <Link to="/ordersummmary">
               <button className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
             </Link>
@@ -141,7 +174,7 @@ const SetupThree = () => {
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <h2 className="text-xl font-bold mb-4">{isEditMode ? "Edit Branch" : "Add Branch"}</h2>
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSave}>
           <div>
             <label className="block text-sm font-medium text-gray-700">Branch Name</label>
             <input
@@ -151,83 +184,90 @@ const SetupThree = () => {
               value={formData.branchName}
               onChange={handleInputChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
+              />
+              {errors.branchName && <span className="text-red-500 text-xs">{errors.branchName}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
+              <input
+                type="text"
+                name="mobileNumber"
+                placeholder="Mobile Number"
+                value={formData.mobileNumber}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="text"
+                name="email"
+                placeholder="Organization Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Address</label>
+              <input
+                type="text"
+                name="address"
+                placeholder="Enter Address"
+                value={formData.address}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">City</label>
+              <input
+                type="text"
+                name="city"
+                placeholder="Enter City"
+                value={formData.city}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.city && <span className="text-red-500 text-xs">{errors.city}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">State</label>
+              <input
+                type="text"
+                name="state"
+                placeholder="Enter State"
+                value={formData.state}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Pin Code</label>
+              <input
+                type="text"
+                name="pinCode"
+                placeholder="Enter Pin Code"
+                value={formData.pinCode}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              />
+              {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
+            </div>
+          </form>
+          <div className="text-right mt-4">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
+              {isEditMode ? 'Update' : 'Save'}
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-            <input
-              type="text"
-              name="mobileNumber"
-              placeholder="Mobile Number"
-              value={formData.mobileNumber}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="text"
-              name="email"
-              placeholder="Organization Email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Address</label>
-            <input
-              type="text"
-              name="address"
-              placeholder="Enter Address"
-              value={formData.address}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">City</label>
-            <input
-              type="text"
-              name="city"
-              placeholder="Enter City"
-              value={formData.city}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">State</label>
-            <input
-              type="text"
-              name="state"
-              placeholder="Enter State"
-              value={formData.state}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Pin Code</label>
-            <input
-              type="text"
-              name="pinCode"
-              placeholder="Enter Pin Code"
-              value={formData.pinCode}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-            />
-          </div>
-        </form>
-        <div className="text-right mt-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
-            {isEditMode ? 'Update' : 'Save'}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-};
-
-export default SetupThree;
+        </Modal>
+      </div>
+    );
+  };
+  
+  export default SetupThree;

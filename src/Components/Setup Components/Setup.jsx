@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -42,22 +43,20 @@ const Setup = () => {
     const hasNumber = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
 
-    if (password.length < 6) {
-      strength = 'weak';
-    } else if (password.length >= 8 && password.length <= 10) {
-      if (hasNumber && hasSpecialChar && hasUpperCase) {
-        strength = 'medium';
-      } else {
-        strength = 'weak';
-      }
-    } else if (password.length > 10 && hasNumber && hasSpecialChar && hasUpperCase) {
+    if (password.length >= 8 && hasNumber && hasSpecialChar && hasUpperCase && hasLowerCase) {
       strength = 'strong';
+    } else if (password.length >= 8) {
+      strength = 'medium';
     } else {
       strength = 'weak';
     }
     setPasswordStrength(strength);
   };
+
+
+
 
   const validateForm = () => {
     let formErrors = {};
@@ -108,6 +107,14 @@ const Setup = () => {
       Object.values(formErrors).forEach(error => toast.error(error));
     }
   };
+
+  const passwordRequirements = [
+    { text: 'Contains at least 8 characters', valid: formData.password.length >= 8 },
+    { text: 'Contains both lower (a-z) and upper case letters (A-Z)', valid: /[a-z]/.test(formData.password) && /[A-Z]/.test(formData.password) },
+    { text: 'Contains at least one number (0-9)', valid: /\d/.test(formData.password) },
+    { text: 'Contains at least one special character', valid: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password) },
+  ];
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -246,27 +253,35 @@ const Setup = () => {
               {errors.credentialsEmail && <span className="text-red-500 text-xs">{errors.credentialsEmail}</span>}
             </div>
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Password <span className='text-red-500'>*</span></label>
-              <div className="relative">
-                <input
-                  type={passwordVisible ? "text" : "password"}
-                  name="password"
-                  className={`mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md ${passwordStrength === 'weak' ? 'bg-red-100' : passwordStrength === 'medium' ? 'bg-yellow-100' : passwordStrength === 'strong' ? 'bg-green-100' : ''}`}
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-                <span 
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                  onClick={() => setPasswordVisible(!passwordVisible)}
-                >
-                  <i className={passwordVisible ? "fas fa-eye-slash" : "fas fa-eye"}></i>
-                </span>
-              </div>
-              {passwordStrength && <span className={`text-xs ${passwordStrength === 'weak' ? 'text-red-500' : passwordStrength === 'medium' ? 'text-yellow-500' : passwordStrength === 'strong' ? 'text-green-500' : ''}`}>
-                {passwordStrength === 'weak' ? 'Weak Password' : passwordStrength === 'medium' ? 'Medium Strength Password' : 'Strong Password'}
-              </span>}
-              {errors.password && <span className="text-red-500 text-xs">{errors.password}</span>}
+            <div>
+      <div>
+        <label>Password</label>
+        <div className="relative">
+          <input
+            type={passwordVisible ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className='mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md'
+          />
+          <span
+            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+            onClick={() => setPasswordVisible(!passwordVisible)}
+          >
+            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+        <div className="mt-2">
+          {passwordRequirements.map((req, index) => (
+            <div key={index} className="flex items-center">
+              {req.valid ? <FaCheck className="text-green-500 mr-2" /> : <FaTimes className="text-red-500 mr-2" />}
+              <span className='text-sm p-2'>{req.text}</span>
             </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    </div>
             <div className="col-span-1 md:col-span-2 flex justify-end">
               <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
             </div>
