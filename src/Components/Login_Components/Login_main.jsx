@@ -22,7 +22,7 @@ const Login_main = () => {
           </div>
           
           <div className="flex flex-col md:flex-row gap-2 md:gap-6">
-            <a href="#" className="text-sm text-white">Register / Sign Up</a>
+            <Link to="/setup" className="text-sm text-white">Register / Sign Up</Link>
             <a href="#" className="text-sm text-white">Forgot Password ?</a>
           </div>
 

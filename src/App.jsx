@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login_main from "./Components/Login_Components/Login_main";
 import Setup from "./Components/Setup Components/Setup";
 import Setup_two from "./Components/Setup Components/Setup_two";
+import Setup_three from "./Components/Setup Components/Setup_three";
+import OrderSummary from "./Components/Setup Components/OrderSummary";
+import Final from "./Components/Setup Components/Final";
 
 
 export default function App() {
@@ -12,6 +15,12 @@ export default function App() {
         <Route path="/" element={<Login_main />} />
         <Route path="/setup" element={<Setup />} />
         <Route path="/setuptwo" element={<Setup_two />} />
+        <Route path="/setupthree" element={<Setup_three />} />
+        <Route path="/ordersummmary" element={<OrderSummary />} />
+        <Route path="/final" element={<Final />} />
+
+
+
 
       </Routes>
     </BrowserRouter>

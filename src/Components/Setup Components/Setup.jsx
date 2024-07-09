@@ -1,93 +1,276 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Setup = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    organizationName: '',
+    founderName: '',
+    mobileNumber: '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    pinCode: '',
+    credentialsEmail: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === 'password') {
+      validatePasswordStrength(value);
+    }
+
+    // Remove error for the field being updated
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: '' });
+    }
+  };
+
+  const validatePasswordStrength = (password) => {
+    let strength = '';
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+
+    if (password.length < 6) {
+      strength = 'weak';
+    } else if (password.length >= 8 && password.length <= 10) {
+      if (hasNumber && hasSpecialChar && hasUpperCase) {
+        strength = 'medium';
+      } else {
+        strength = 'weak';
+      }
+    } else if (password.length > 10 && hasNumber && hasSpecialChar && hasUpperCase) {
+      strength = 'strong';
+    } else {
+      strength = 'weak';
+    }
+    setPasswordStrength(strength);
+  };
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!formData.firstName) formErrors.firstName = "First Name is required";
+    if (!formData.lastName) formErrors.lastName = "Last Name is required";
+    if (!formData.organizationName) formErrors.organizationName = "Organization Name is required";
+    if (!formData.founderName) formErrors.founderName = "Founder Name is required";
+    if (!formData.mobileNumber) formErrors.mobileNumber = "Mobile Number is required";
+    if (!formData.email) {
+      formErrors.email = "Organization Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      formErrors.email = "Organization Email is invalid";
+    }
+    if (!formData.address) formErrors.address = "Address is required";
+    if (!formData.city) formErrors.city = "City is required";
+    if (!formData.state) formErrors.state = "State is required";
+    if (!formData.pinCode) formErrors.pinCode = "Pin Code is required";
+    if (!formData.credentialsEmail) {
+      formErrors.credentialsEmail = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.credentialsEmail)) {
+      formErrors.credentialsEmail = "Email is invalid";
+    }
+    if (!formData.password) {
+      formErrors.password = "Password is required";
+    } else if (passwordStrength === 'weak') {
+      formErrors.password = "Password should contain one special character, one number, one uppercase letter, and must be at least 8 characters long";
+    }
+    return formErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length === 0) {
+      const branchDetails = {
+        branchName: formData.organizationName,
+        mobileNumber: formData.mobileNumber,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pinCode: formData.pinCode,
+      };
+      localStorage.setItem('branchDetails', JSON.stringify([branchDetails]));
+      navigate('/setupthree');
+    } else {
+      setErrors(formErrors);
+      Object.values(formErrors).forEach(error => toast.error(error));
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      {/* <ToastContainer /> */}
       <div className="bg-white p-4 sm:p-10 rounded-lg shadow-lg max-w-4xl h-full w-full flex flex-col md:flex-row">
         <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-full md:w-96 rounded-l-lg">
           <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" alt="QubicGen Logo" className="mb-8" />
         </div>
         <div className="w-full md:w-3/4 p-4 md:p-6 h-full overflow-y-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">SetUp Your Account</h1>
-          <div className="flex justify-evenly mb-4 md:mb-8">
-            <div className="flex flex-col items-center">
-              <div className="bg-yellow-500 rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">1</div>
-              <span className="text-xs md:text-base">Organization</span>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">
+                First Name <span className='text-red-600'>*</span>
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+              {errors.firstName && <span className="text-red-500 text-xs">{errors.firstName}</span>}
             </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-[#00274D] rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">2</div>
-              <span className="text-xs md:text-base">Payment</span>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Last Name<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="lastName"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+              {errors.lastName && <span className="text-red-500 text-xs">{errors.lastName}</span>}
             </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-[#00274D] rounded-full w-8 h-8 md:w-12 md:h-12 flex justify-center items-center text-white font-bold mb-2">3</div>
-              <span className="text-xs md:text-base">Finish</span>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Name<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="organizationName"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.organizationName}
+                onChange={handleChange}
+              />
+              {errors.organizationName && <span className="text-red-500 text-xs">{errors.organizationName}</span>}
             </div>
-          </div>
-          <div className="h-[55vh] overflow-y-auto">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">First Name <span className='text-red-600'><span className='text-red-500'>*</span></span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Founder Name<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="founderName"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.founderName}
+                onChange={handleChange}
+              />
+              {errors.founderName && <span className="text-red-500 text-xs">{errors.founderName}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Mobile Number<span className='text-red-500'>*</span></label>
+              <input
+                type="number"
+                name="mobileNumber"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+              />
+              {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Email<span className='text-red-500'>*</span></label>
+              <input
+                type="email"
+                name="email"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Address<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="address"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.address}
+                onChange={handleChange}
+              />
+              {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">City<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="city"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.city}
+                onChange={handleChange}
+              />
+              {errors.city && <span className="text-red-500 text-xs">{errors.city}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">State<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="state"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.state}
+                onChange={handleChange}
+              />
+              {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Pin Code<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="pinCode"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.pinCode}
+                onChange={handleChange}
+              />
+              {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
+            </div>
+            <div className="col-span-1 md:col-span-2 mt-2 md:mt-4">
+              <h2 className="text-lg md:text-xl font-bold">Credentials</h2>
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Email<span className='text-red-500'>*</span></label>
+              <input
+                type="email"
+                name="credentialsEmail"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.credentialsEmail}
+                onChange={handleChange}
+              />
+              {errors.credentialsEmail && <span className="text-red-500 text-xs">{errors.credentialsEmail}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Password <span className='text-red-500'>*</span></label>
+              <div className="relative">
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  name="password"
+                  className={`mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md ${passwordStrength === 'weak' ? 'bg-red-100' : passwordStrength === 'medium' ? 'bg-yellow-100' : passwordStrength === 'strong' ? 'bg-green-100' : ''}`}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <span 
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                  <i className={passwordVisible ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+                </span>
               </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Last Name<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Name<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Founder Name<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Mobile Number<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Email<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Address<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">City<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">State<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Pin Code<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div className="col-span-1 md:col-span-2 mt-2 md:mt-4">
-                <h2 className="text-lg md:text-xl font-bold">Credentials</h2>
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Email<span className='text-red-500'>*</span></label>
-                <input type="text" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-700">Password<span className='text-red-500'>*</span></label>
-                <input type="password" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md" />
-              </div>
-              
-            </form>
-            
-          </div>
-          <div className="col-span-1 md:col-span-2 flex justify-end ">
-                <div className="relative top-5">
-                  <Link to="/setuptwo">
-                    <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
-                  </Link>
-                </div>
-              </div>
+              {passwordStrength && <span className={`text-xs ${passwordStrength === 'weak' ? 'text-red-500' : passwordStrength === 'medium' ? 'text-yellow-500' : passwordStrength === 'strong' ? 'text-green-500' : ''}`}>
+                {passwordStrength === 'weak' ? 'Weak Password' : passwordStrength === 'medium' ? 'Medium Strength Password' : 'Strong Password'}
+              </span>}
+              {errors.password && <span className="text-red-500 text-xs">{errors.password}</span>}
+            </div>
+            <div className="col-span-1 md:col-span-2 flex justify-end">
+              <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
