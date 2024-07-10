@@ -29,7 +29,7 @@ const Login_main = () => {
             <a href="#" className="text-sm text-white" onClick={() => setShowModal(true)}>Forgot Password ?</a>
           </div>
 
-          <Link to="/setup">
+          <Link to="/dashboard">
             <button className="bg-blue-500 hover:bg-yellow-600 text-white text-base font-bold px-16 py-2 rounded-2xl">LOG IN</button>
           </Link>
 
