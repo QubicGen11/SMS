@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-import { FaCog } from "react-icons/fa";
 
-import Header from "../Header_Components/Header";
+import Dbmain from "./Dbmain"; // Assuming path is correct
 import Sidemenu from "../Sidemanu_Components/Sidemenu";
-import Dbmain from "./Dbmain";
+import Header from "../Header_Components/Header";
+
 
 const Dashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
 
-      <Sidemenu />
-      {/* Main content */}
+      <Sidemenu sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />      {/* Main content */}
       <div className="flex flex-col flex-1 w-full overflow-hidden">
         {/* Header */}
 
-        <Header />
-
+        <Header toggleSidebar={toggleSidebar} />
         {/* Main section */}
         <main className="flex flex-col flex-1 p-4 overflow-y-auto justify-start lg:gap-10 bg-gray-100">
           <div>
