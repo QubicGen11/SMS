@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import Modal from '../Modal Components/Modal'; // Adjust the path if necessary
 import StepIndicator from './StepIndicator';
 
-
-
 const SetupThree = () => {
-
   const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
   const currentStep = 1; // Set this dynamically as per your logic
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +31,20 @@ const SetupThree = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Fetch city and state when pinCode changes
+    if (name === 'pinCode' && value.length === 6) {
+      fetch(`https://api.postalpincode.in/pincode/${value}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data[0].Status === 'Success') {
+            const { State, District } = data[0].PostOffice[0];
+            setFormData({ ...formData, state: State, city: District, pinCode: value });
+          } else {
+            setFormData({ ...formData, state: '', city: '' });
+          }
+        });
+    }
 
     // Remove error for the field being updated
     if (errors[name]) {
@@ -138,8 +149,7 @@ const SetupThree = () => {
               <tbody>
                 {branchDetails.map((branch, index) => (
                   <tr key={index}>
-                   <td className="py-2 px-4 border-b text-center">{index+1}</td>
-
+                    <td className="py-2 px-4 border-b text-center">{index+1}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.branchName}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.city}</td>
                     <td className="py-2 px-4 border-b text-center">
@@ -177,90 +187,91 @@ const SetupThree = () => {
               value={formData.branchName}
               onChange={handleInputChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.branchName && <span className="text-red-500 text-xs">{errors.branchName}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-              <input
-                type="text"
-                name="mobileNumber"
-                placeholder="Mobile Number"
-                value={formData.mobileNumber}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="text"
-                name="email"
-                placeholder="Organization Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Address</label>
-              <input
-                type="text"
-                name="address"
-                placeholder="Enter Address"
-                value={formData.address}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">City</label>
-              <input
-                type="text"
-                name="city"
-                placeholder="Enter City"
-                value={formData.city}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.city && <span className="text-red-500 text-xs">{errors.city}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">State</label>
-              <input
-                type="text"
-                name="state"
-                placeholder="Enter State"
-                value={formData.state}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Pin Code</label>
-              <input
-                type="text"
-                name="pinCode"
-                placeholder="Enter Pin Code"
-                value={formData.pinCode}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
-              />
-              {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
-            </div>
-          </form>
-          <div className="text-right mt-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
-              {isEditMode ? 'Update' : 'Save'}
-            </button>
+            />
+            {errors.branchName && <span className="text-red-500 text-xs">{errors.branchName}</span>}
           </div>
-        </Modal>
-      </div>
-    );
-  };
-  
-  export default SetupThree;
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
+            <input
+              type="text"
+              name="mobileNumber"
+              placeholder="Mobile Number"
+              value={formData.mobileNumber}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="Organization Email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Address</label>
+            <input
+              type="text"
+              name="address"
+              placeholder="Enter Address"
+              value={formData.address}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Pin Code</label>
+            <input
+              type="text"
+              name="pinCode"
+              placeholder="Enter Pin Code"
+              value={formData.pinCode}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">City</label>
+            <input
+              type="text"
+              name="city"
+              placeholder="Enter City"
+              value={formData.city}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.city && <span className="text-red-500 text-xs">{errors.city}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">State</label>
+            <input
+              type="text"
+              name="state"
+              placeholder="Enter State"
+              value={formData.state}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
+          </div>
+       
+        </form>
+        <div className="text-right mt-4">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
+            {isEditMode ? 'Update' : 'Save'}
+          </button>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+export default SetupThree;

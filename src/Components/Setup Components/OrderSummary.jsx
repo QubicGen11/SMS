@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import StepIndicator from './StepIndicator';
 
 const Setup_two = () => {
+  const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
+  const currentStep = 2; // Set this dynamically as per your logic
   const [branchCount, setBranchCount] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState(3); // Default to 3 months
   const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [showBranchDetails, setShowBranchDetails] = useState(false);
   const amountPerBranch = 6000;
-  const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
-  const currentStep = 2; // Assuming step index starts from 0, so 'Payment' is step 2
 
   useEffect(() => {
     const storedBranchDetails = JSON.parse(localStorage.getItem('branchDetails')) || [];
@@ -39,6 +40,7 @@ const Setup_two = () => {
         <div className="w-full md:w-3/4 p-6">
           <h1 className="text-3xl font-bold mb-4 text-center">SetUp Your Account</h1>
           <StepIndicator steps={steps} currentStep={currentStep} />
+
           <div className="border-t border-b py-4 mb-4">
             <div className="flex justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">{branchCount} item(s)</span>
@@ -48,8 +50,11 @@ const Setup_two = () => {
               <h2 className="text-xl font-semibold text-gray-900">Branch Subscription</h2>
               <p className="text-sm text-gray-600">{branchCount} Branch(es)</p>
               <p className="text-sm text-gray-600">Subscription Plan</p>
-              
-              <a href="/setupthree" className="text-sm text-blue-500">Edit Branch</a>
+              <p>
+              <a href='/setupthree' className="text-sm text-blue-500">Edit Branch Details</a>
+              </p>
+
+              <button onClick={() => setShowBranchDetails(true)} className="text-sm text-blue-500">View Branch Details</button>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-blue-500">Add Coupon Code</span>
@@ -144,10 +149,6 @@ const Setup_two = () => {
                   </div>
                   <div className="w-1/3 pl-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">CVV</label>
-                    <input type="text" placeholder='CVV' className="mt-1 block w-full p-2 border"/>
-                  </div>
-                  <div className="w-1/3 pl-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">CVV</label>
                     <input type="text" placeholder='CVV' className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
                   </div>
                 </div>
@@ -162,6 +163,31 @@ const Setup_two = () => {
           </div>
         </div>
       </div>
+      {showBranchDetails && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4">Branch Details</h2>
+            <ul>
+              {Array.from({ length: branchCount }, (_, i) => (
+                <li key={i} className="flex justify-between py-2 border-b">
+                  <span>Branch {i + 1}</span>
+                  <span>₹{amountPerBranch}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-between mt-4">
+              <span className="text-lg font-semibold">Total</span>
+              <span className="text-lg font-semibold">₹{totalAmount}</span>
+            </div>
+            <button
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={() => setShowBranchDetails(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
