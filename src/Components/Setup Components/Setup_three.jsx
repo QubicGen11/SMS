@@ -138,9 +138,9 @@ const SetupThree = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full flex md:flex-row h-[90vh]">
-        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg">
-          <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" alt="QubicGen Logo" className="mb-8" />
+      <div className="bg-white rounded-lg shadow-lg max-w-96xl w-full flex md:flex-row h-[90vh]">
+        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] w-[40vw] text-white p-8 w-96 rounded-l-lg">
+          <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720606348/Registration_Page_02_hi8a4m.gif" alt="QubicGen Logo" className="mb-8" />
         </div>
         <div className="w-full md:w-3/4 p-4 md:p-6 h-full overflow-y-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">Set Up Your Account</h1>

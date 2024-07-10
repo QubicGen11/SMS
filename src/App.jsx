@@ -6,6 +6,7 @@ import Setup_two from "./Components/Setup Components/Setup_two";
 import Setup_three from "./Components/Setup Components/Setup_three";
 import OrderSummary from "./Components/Setup Components/OrderSummary";
 import Final from "./Components/Setup Components/Final";
+import Dashboard from "./Components/Dashboard_Components/Dashboard";
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/setupthree" element={<Setup_three />} />
         <Route path="/ordersummmary" element={<OrderSummary />} />
         <Route path="/final" element={<Final />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
 
 

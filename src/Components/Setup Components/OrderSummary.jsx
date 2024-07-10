@@ -33,11 +33,11 @@ const Setup_two = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full flex md:flex-row h-full">
-        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg">
+      <div className="flex max-w-4xl w-full h-full">
+        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 h-full fixed left-0 top-0 bottom-0">
           <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" alt="QubicGen Logo" className="mb-8" />
         </div>
-        <div className="w-full md:w-3/4 p-6">
+        <div className="w-full md:w-3/4 p-6 ml-auto md:ml-[24rem] lg:ml-auto" >
           <h1 className="text-3xl font-bold mb-4 text-center">SetUp Your Account</h1>
           <StepIndicator steps={steps} currentStep={currentStep} />
 
@@ -51,7 +51,7 @@ const Setup_two = () => {
               <p className="text-sm text-gray-600">{branchCount} Branch(es)</p>
               <p className="text-sm text-gray-600">Subscription Plan</p>
               <p>
-              <a href='/setupthree' className="text-sm text-blue-500">Edit Branch Details</a>
+                <a href='/setupthree' className="text-sm text-blue-500">Edit Branch Details</a>
               </p>
 
               <button onClick={() => setShowBranchDetails(true)} className="text-sm text-blue-500">View Branch Details</button>
@@ -193,3 +193,4 @@ const Setup_two = () => {
 };
 
 export default Setup_two;
+                 
