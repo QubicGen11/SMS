@@ -19,6 +19,8 @@ const Setup = () => {
     city: '',
     state: '',
     pinCode: '',
+    mandal: '',
+    village: '',
     credentialsEmail: '',
     password: '',
   });
@@ -54,12 +56,14 @@ const Setup = () => {
       const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
       const data = response.data[0];
       if (data.Status === 'Success') {
-        const { State, District } = data.PostOffice[0];
+        const { State, District, Name ,Block} = data.PostOffice[0];
         setFormData({
           ...formData,
           pinCode: pincode,
           state: State,
           city: District,
+          mandal: Block, // Assuming mandal is the same as District
+          village: Name, // Assuming village is the same as Name
         });
       } else {
         toast.error('Invalid Pincode');
@@ -128,6 +132,8 @@ const Setup = () => {
         city: formData.city,
         state: formData.state,
         pinCode: formData.pinCode,
+        mandal: formData.mandal,
+        village: formData.village,
       };
       localStorage.setItem('branchDetails', JSON.stringify([branchDetails]));
       navigate('/setupthree');
@@ -191,7 +197,6 @@ const Setup = () => {
               />
               {errors.organizationName && <span className="text-red-500 text-xs">{errors.organizationName}</span>}
             </div>
-            
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">Founder Name<span className='text-red-500'>*</span></label>
               <input
@@ -269,7 +274,28 @@ const Setup = () => {
               />
               {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
             </div>
-           
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Mandal<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="mandal"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.mandal}
+                onChange={handleChange}
+              />
+              {errors.mandal && <span className="text-red-500 text-xs">{errors.mandal}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Village<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="village"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.village}
+                onChange={handleChange}
+              />
+              {errors.village && <span className="text-red-500 text-xs">{errors.village}</span>}
+            </div>
             <div className="col-span-1 md:col-span-2 mt-2 md:mt-4">
               <h2 className="text-lg md:text-xl font-bold">Credentials</h2>
             </div>
@@ -318,6 +344,7 @@ const Setup = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

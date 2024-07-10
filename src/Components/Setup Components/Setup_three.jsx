@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../Modal Components/Modal'; // Adjust the path if necessary
 import StepIndicator from './StepIndicator';
-
 const SetupThree = () => {
   const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
   const currentStep = 1; // Set this dynamically as per your logic
@@ -18,6 +17,8 @@ const SetupThree = () => {
     city: '',
     state: '',
     pinCode: '',
+    mandal: '',
+    village: '',
   });
   const [errors, setErrors] = useState({});
 
@@ -32,16 +33,29 @@ const SetupThree = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    // Fetch city and state when pinCode changes
+    // Fetch city, state, mandal, and village when pinCode changes
     if (name === 'pinCode' && value.length === 6) {
       fetch(`https://api.postalpincode.in/pincode/${value}`)
         .then(response => response.json())
         .then(data => {
           if (data[0].Status === 'Success') {
-            const { State, District } = data[0].PostOffice[0];
-            setFormData({ ...formData, state: State, city: District, pinCode: value });
+            const { State, District, Block, Name } = data[0].PostOffice[0];
+            setFormData({
+              ...formData,
+              state: State,
+              city: District,
+              mandal: Block,
+              village: Name,
+              pinCode: value,
+            });
           } else {
-            setFormData({ ...formData, state: '', city: '' });
+            setFormData({
+              ...formData,
+              state: '',
+              city: '',
+              mandal: '',
+              village: '',
+            });
           }
         });
     }
@@ -54,24 +68,24 @@ const SetupThree = () => {
 
   const validateForm = () => {
     let formErrors = {};
-    if (!formData.branchName) formErrors.branchName = "Branch Name is required";
+    if (!formData.branchName) formErrors.branchName = 'Branch Name is required';
     if (!formData.mobileNumber) {
-      formErrors.mobileNumber = "Mobile Number is required";
+      formErrors.mobileNumber = 'Mobile Number is required';
     } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
-      formErrors.mobileNumber = "Mobile Number is invalid";
+      formErrors.mobileNumber = 'Mobile Number is invalid';
     }
     if (!formData.email) {
-      formErrors.email = "Email is required";
+      formErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      formErrors.email = "Email is invalid";
+      formErrors.email = 'Email is invalid';
     }
-    if (!formData.address) formErrors.address = "Address is required";
-    if (!formData.city) formErrors.city = "City is required";
-    if (!formData.state) formErrors.state = "State is required";
+    if (!formData.address) formErrors.address = 'Address is required';
+    if (!formData.city) formErrors.city = 'City is required';
+    if (!formData.state) formErrors.state = 'State is required';
     if (!formData.pinCode) {
-      formErrors.pinCode = "Pin Code is required";
+      formErrors.pinCode = 'Pin Code is required';
     } else if (!/^\d{6}$/.test(formData.pinCode)) {
-      formErrors.pinCode = "Pin Code is invalid";
+      formErrors.pinCode = 'Pin Code is invalid';
     }
     return formErrors;
   };
@@ -82,7 +96,7 @@ const SetupThree = () => {
     if (Object.keys(formErrors).length === 0) {
       let updatedDetails;
       if (isEditMode) {
-        updatedDetails = branchDetails.map((branch, index) => 
+        updatedDetails = branchDetails.map((branch, index) =>
           index === editIndex ? formData : branch
         );
         setIsEditMode(false);
@@ -100,6 +114,8 @@ const SetupThree = () => {
         city: '',
         state: '',
         pinCode: '',
+        mandal: '',
+        village: '',
       });
       setShowModal(false);
     } else {
@@ -149,7 +165,7 @@ const SetupThree = () => {
               <tbody>
                 {branchDetails.map((branch, index) => (
                   <tr key={index}>
-                    <td className="py-2 px-4 border-b text-center">{index+1}</td>
+                    <td className="py-2 px-4 border-b text-center">{index + 1}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.branchName}</td>
                     <td className="py-2 px-4 border-b text-center">{branch.city}</td>
                     <td className="py-2 px-4 border-b text-center">
@@ -200,7 +216,7 @@ const SetupThree = () => {
               onChange={handleInputChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
             />
-            {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+                       {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -239,6 +255,30 @@ const SetupThree = () => {
             {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
           </div>
           <div>
+            <label className="block text-sm font-medium text-gray-700">Village</label>
+            <input
+              type="text"
+              name="village"
+              placeholder="Enter Village"
+              value={formData.village}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.village && <span className="text-red-500 text-xs">{errors.village}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mandal</label>
+            <input
+              type="text"
+              name="mandal"
+              placeholder="Enter Mandal"
+              value={formData.mandal}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+            />
+            {errors.mandal && <span className="text-red-500 text-xs">{errors.mandal}</span>}
+          </div>
+          <div>
             <label className="block text-sm font-medium text-gray-700">City</label>
             <input
               type="text"
@@ -262,7 +302,8 @@ const SetupThree = () => {
             />
             {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
           </div>
-       
+          
+        
         </form>
         <div className="text-right mt-4">
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
