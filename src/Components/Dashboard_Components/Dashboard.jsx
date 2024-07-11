@@ -15,7 +15,7 @@ const Dashboard = () => {
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
 
-      <Sidemenu sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />      {/* Main content */}
+      <Sidemenu sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />      
       <div className="flex flex-col flex-1 w-full overflow-hidden">
         {/* Header */}
 
@@ -27,9 +27,9 @@ const Dashboard = () => {
             <h1 className="font-light text-xs">Have a nice day</h1>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <Dbmain />
-          </div>
+     <div className="grid grid-cols-2 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <Dbmain/>
+</div>
         </main>
       </div>
     </div>
