@@ -7,6 +7,7 @@ import {
 const Dbmain = () => {
   return (
     <>
+    
  
  <Link
               to="/students"
@@ -61,7 +62,7 @@ const Dbmain = () => {
                 to="/settings"
                 className="flex flex-col items-center justify-center p-4 bg-white border w-10/12   border-gray-200 rounded-3xl shadow-md hover:shadow-xl"
               >
-                <FaCog className="text-4xl text-gray-500" />
+                <FaCog className="text-4xl text-gray-500 w-24" />
                 <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Settings</span>
               </Link>
     </>

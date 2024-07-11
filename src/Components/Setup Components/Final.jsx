@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SetupComplete = () => {
+const Final = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white rounded-lg shadow-lg max-w-96xl w-full flex md:flex-row h-full">
@@ -41,4 +41,4 @@ const SetupComplete = () => {
   );
 };
 
-export default SetupComplete;
+export default Final;
