@@ -1,53 +1,76 @@
 import React, { useState } from 'react';
-import { FaBars, FaBell } from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
+import { FaBars, FaBell, FaSearch, FaTimes } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
-const Header = ({toggleSidebar}) => {
-  const navItems = [
-    { label: "Enrollment/Registration", path: "/enrolements", icon: "https://res.cloudinary.com/devewerw3/image/upload/v1720621562/registration_1_fhn9in.png" },
-    { label: "Dashboard", path: "/dashboard", icon: "https://res.cloudinary.com/devewerw3/image/upload/v1720621544/Dashboard-Gold_pvju51.png" },
-    { label: "User Management", path: "/user-management", icon: "https://res.cloudinary.com/devewerw3/image/upload/v1720621525/User_Managemnt_z67xge.png" },
-    { label: "Finances", path: "/finances", icon: "https://res.cloudinary.com/devewerw3/image/upload/v1720621516/budget_ewo8gi.png" },
-    { label: "Metrics", path: "/metrics", icon: "https://res.cloudinary.com/devewerw3/image/upload/v1720621495/icons8-laptop-metrics-100_s21zgl.png" }
-];
-    const location = useLocation(); // Hook to get location object
+const Header = ({ toggleSidebar }) => {
+  const [searchValue, setSearchValue] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const location = useLocation();
 
- 
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
-    const isActive = (path) => {
-        return location.pathname === path;
-    };
+  return (
+    <header className="flex items-center justify-between h-16 p-4 bg-[#00274D] text-orange shadow-lg">
+      <button className="text-white md:hidden" onClick={toggleSidebar}>
+        <FaBars />
+      </button>
+      <div className="flex flex-1 items-center space-x-4 md:space-x-8 ">
+        <div className="flex items-center rounded-lg p-2 relative">
+          {!searchOpen && (
+            <FaSearch
+              className="text-white cursor-pointer"
+              onClick={() => setSearchOpen(true)}
+            />
+          )}
+          <div
+            className={`relative flex items-center transition-all duration-300 ease-in-out ${
+              searchOpen ? ' md:w-52 lg:w-96' : 'w-0'
+            }`}
+            style={{ visibility: searchOpen ? 'visible' : 'hidden' }}
+          >
+            <FaSearch className="absolute left-3 top-2.5 text-black" />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full h-9 rounded-lg text-black pl-10 pr-10"
+              placeholder="Search"
+            />
+            {searchValue && (
+              <FaTimes
+                className="absolute right-3 top-2.5 text-black cursor-pointer"
+                onClick={() => setSearchValue('')}
+              />
+            )}
+          </div>
+        </div>
+        <select className="bg-[#00274D] text-white hidden md:block md:w-28 lg:w-28 h-9 rounded-lg">
+          <option value="">Category</option>
+          <option value="">Teachers</option>
+          <option value="">Students</option>
+          <option value="">Non Teaching Staff</option>
+        </select>
 
-    return (
-        <header className="flex items-center justify-between h-16 p-4 bg-[#00274D] text-white shadow-lg">
-            <button className="text-white md:hidden" onClick={toggleSidebar}>
-                <FaBars />
-            </button>
-            <nav className="hidden md:flex space-x-4">
-                {/* Iterate over nav items */}
-                {navItems.map(item => (
-    <Link to={item.path} key={item.path} className={`flex ${isActive(item.path) ? 'bg-blue-600' : 'hover:bg-blue-600'} bg-white items-center gap-2 px-4 rounded-md xl:h-9`}>
-        <img src={item.icon} className='w-7 lg:hidden xl:block 2xl:block' alt={item.label} />
-        <span className={`text-black hidden lg:block lg:text-base xl:text-base ${isActive(item.path) ? 'text-white' : ''}`}>{item.label}</span>
-    </Link>
-))}
-            </nav>
-            <div className="flex items-center space-x-4">
-                <FaBell className="text-gray-300" />
-                <div className="flex items-center space-x-2">
-                    <img
-                        src="https://via.placeholder.com/40"
-                        alt="User avatar"
-                        className="w-8 h-8 rounded-full"
-                    />
-                    <div className="text-white">
-                        <span>QubicGen</span>
-                        <span className="block text-sm text-gray-300">Admin</span>
-                    </div>
-                </div>
+        <div className="flex-grow"></div> {/* This div will take up the remaining space and push the next div to the right */}
+        <div className="flex items-center space-x-4">
+          <FaBell className="text-gray-300" />
+          <div className="flex items-center space-x-2">
+            <img
+              src="https://res.cloudinary.com/defsu5bfc/image/upload/v1714828410/logo_3_jizb6b.png"
+              alt="User avatar"
+              className="w-12 rounded-full"
+            />
+            <div className="text-white">
+              <span className="hidden md:block">QubicGen</span>
+              <span className="text-sm text-gray-300 hidden md:block">Admin</span>
             </div>
-        </header>
-    );
-}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
 
 export default Header;
