@@ -1,7 +1,9 @@
 import React from 'react';
 import {
   FaBars, FaBell, FaBullhorn, FaCalendarAlt, FaChalkboardTeacher,
-  FaClipboardCheck, FaCog, FaFileAlt, FaHome, FaTimes, FaUserGraduate, FaUsers
+  FaChartBar,
+  FaClipboardCheck, FaCog, FaFileAlt, FaHome, FaMoneyBill, FaRegistered, FaTimes, FaUser, FaUserGraduate, FaUsers,
+  FaWpforms
 } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -31,39 +33,55 @@ const Sidemenu = ({ sidebarOpen, toggleSidebar }) => {
         </button>
       </div>
       <nav className="flex flex-col p-4 space-y-4 mt-5">
-        <Link to="/dashboard" className={`flex items-center p-2 rounded-md ${isActive('/dashboard') ? 'bg-blue-700 text-black' : 'hover:bg-blue-600'}`}>
+        <Link to="/dashboard" className={`flex items-center p-2 rounded-md ${isActive('/dashboard') ? 'bg-white text-black' : 'hover:bg-yellow-500'}`}>
           <FaHome size={24} />
-          {sidebarOpen && <span className="ml-2">Dashboard</span>}
+          {sidebarOpen && <span className="ml-2">Home</span>}
         </Link>
-        <Link to="/students" className={`flex items-center p-2 rounded-md ${isActive('/students') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/metrics" className={`flex items-center p-2 rounded-md ${isActive('/metrics') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
+        <FaChartBar size={24}/>
+          {sidebarOpen && <span className="ml-2">Metrics</span>}
+        </Link>
+        <Link to="/enrollments" className={`flex items-center p-2 rounded-md ${isActive('/enrollments') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
+        <FaWpforms size={24} />
+          {sidebarOpen && <span className="ml-2">Enrollment/Registration</span>}
+        </Link>
+        <Link to="/finances" className={`flex items-center p-2 rounded-md ${isActive('/finances') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
+        <FaMoneyBill size={24}/>
+          {sidebarOpen && <span className="ml-2">Finances</span>}
+        </Link>
+        <Link to="/user-management" className={`flex items-center p-2 rounded-md ${isActive('/user-management') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
+        <FaUser size={24}/>
+          {sidebarOpen && <span className="ml-2">User Management</span>}
+        </Link>
+        <Link to="/students" className={`flex items-center p-2 rounded-md ${isActive('/students') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaUserGraduate size={24} />
           {sidebarOpen && <span className="ml-2">Students</span>}
         </Link>
-        <Link to="/teachers" className={`flex items-center p-2 rounded-md ${isActive('/teachers') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/teachers" className={`flex items-center p-2 rounded-md ${isActive('/teachers') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaChalkboardTeacher size={24} />
           {sidebarOpen && <span className="ml-2">Teachers</span>}
         </Link>
-        <Link to="/attendance" className={`flex items-center p-2 rounded-md ${isActive('/attendance') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/attendance" className={`flex items-center p-2 rounded-md ${isActive('/attendance') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaClipboardCheck size={24} />
           {sidebarOpen && <span className="ml-2">Attendance</span>}
         </Link>
-        <Link to="/marks" className={`flex items-center p-2 rounded-md ${isActive('/marks') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/marks" className={`flex items-center p-2 rounded-md ${isActive('/marks') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaFileAlt size={24} />
           {sidebarOpen && <span className="ml-2">Marks</span>}
         </Link>
-        <Link to="/staff" className={`flex items-center p-2 rounded-md ${isActive('/staff') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/staff" className={`flex items-center p-2 rounded-md ${isActive('/staff') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaUsers size={24} />
           {sidebarOpen && <span className="ml-2">Staff</span>}
         </Link>
-        <Link to="/leaves" className={`flex items-center p-2 rounded-md ${isActive('/leaves') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/leaves" className={`flex items-center p-2 rounded-md ${isActive('/leaves') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaCalendarAlt size={24} />
           {sidebarOpen && <span className="ml-2">Leaves</span>}
         </Link>
-        <Link to="/announcements" className={`flex items-center p-2 rounded-md ${isActive('/announcements') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/announcements" className={`flex items-center p-2 rounded-md ${isActive('/announcements') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaBullhorn size={24} />
           {sidebarOpen && <span className="ml-2">Announcements</span>}
         </Link>
-        <Link to="/settings" className={`flex items-center p-2 rounded-md ${isActive('/settings') ? 'bg-white text-[#00274D]' : 'hover:bg-blue-600'}`}>
+        <Link to="/settings" className={`flex items-center p-2 rounded-md ${isActive('/settings') ? 'bg-white text-[#00274D]' : 'hover:bg-yellow-500'}`}>
           <FaCog size={24} />
           {sidebarOpen && <span className="ml-2">Settings</span>}
         </Link>

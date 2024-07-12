@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBars, FaBell, FaSearch, FaTimes } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 
 const Header = ({ toggleSidebar }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(window.innerWidth >= 1280);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1280) {
+        setSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -16,7 +28,7 @@ const Header = ({ toggleSidebar }) => {
       <button className="text-white md:hidden" onClick={toggleSidebar}>
         <FaBars />
       </button>
-      <div className="flex flex-1 items-center space-x-4 md:space-x-8 ">
+      <div className="flex flex-1 items-center space-x-4 md:space-x-8">
         <div className="flex items-center rounded-lg p-2 relative">
           {!searchOpen && (
             <FaSearch
@@ -26,17 +38,19 @@ const Header = ({ toggleSidebar }) => {
           )}
           <div
             className={`relative flex items-center transition-all duration-300 ease-in-out ${
-              searchOpen ? ' md:w-52 lg:w-96' : 'w-0'
+              searchOpen ? 'w-60 md:w-52 lg:w-96 xl:w-full' : 'w-0'
             }`}
-            style={{ visibility: searchOpen ? 'visible' : 'hidden' }}
           >
             <FaSearch className="absolute left-3 top-2.5 text-black" />
             <input
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full h-9 rounded-lg text-black pl-10 pr-10"
+              className={`h-9 rounded-lg text-black pl-10 pr-10 ${
+                searchOpen ? 'w-full' : 'w-0'
+              }`}
               placeholder="Search"
+              style={{ visibility: searchOpen ? 'visible' : 'hidden' }}
             />
             {searchValue && (
               <FaTimes
@@ -53,7 +67,7 @@ const Header = ({ toggleSidebar }) => {
           <option value="">Non Teaching Staff</option>
         </select>
 
-        <div className="flex-grow"></div> {/* This div will take up the remaining space and push the next div to the right */}
+        <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
           <FaBell className="text-gray-300" />
           <div className="flex items-center space-x-2">

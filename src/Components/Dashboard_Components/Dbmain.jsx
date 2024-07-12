@@ -13,14 +13,14 @@ const Dbmain = () => {
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-3xl w-10/12 shadow-md hover:shadow-xl"
             >
               <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772446/Metrics_rretv9.png" className='w-24' alt="" />
-              <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Metrices</span>
+              <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Metrics</span>
             </Link>
             <Link
               to="/teachers"
               className="flex flex-col items-center justify-center p-4 bg-white  border border-gray-200 w-10/12  rounded-3xl shadow-md hover:shadow-xl"
             >
               <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772427/Registration_mmddw4.png" className='w-24' alt="" />
-              <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Enrollement/ Registration</span>
+              <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Enrollment/Registration</span>
             </Link>
             <Link
               to="/attendance"
