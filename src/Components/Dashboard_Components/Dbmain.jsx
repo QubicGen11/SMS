@@ -41,35 +41,35 @@ const Dbmain = () => {
               to="/students"
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-3xl w-10/12 shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611744/Students_fxzltp.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772378/Students_quljje.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Students</span>
             </Link>
             <Link
               to="/teachers"
               className="flex flex-col items-center justify-center p-4 bg-white  border border-gray-200 w-10/12  rounded-3xl shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611738/Teachers_h8i7rx.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772365/Teachers_wdoq9f.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Teachers</span>
             </Link>
             <Link
               to="/attendance"
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 w-10/12  rounded-3xl shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611726/Attendance_d9wmem.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772326/Marks_ynnahe.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Attendance</span>
             </Link>
             <Link
               to="/marks"
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 w-10/12  rounded-3xl shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611710/Marks_nf2g0o.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772326/Marks_ynnahe.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Marks</span>
             </Link>
             <Link
               to="/staff"
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200  w-10/12 rounded-3xl shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611678/management_stv5su.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772308/Staff_ukgko1.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg  font-semibold">Staff</span>
             </Link>
             <Link
@@ -83,7 +83,7 @@ const Dbmain = () => {
               to="/announcements"
               className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 w-10/12  rounded-3xl shadow-md hover:shadow-xl"
             >
-              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720611657/Announcements_n9o9ed.png" className='w-24' alt="" />
+              <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772198/Announcements_d7rrb4.png" className='w-24' alt="" />
               <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg font-semibold">Announcements</span>
             </Link>
             <Link

@@ -8,6 +8,7 @@ import OrderSummary from "./Components/Setup Components/OrderSummary";
 import Final from "./Components/Setup Components/Final";
 import Dashboard from "./Components/Dashboard_Components/Dashboard";
 import Enrolements from "./Components/Enrolements_Components/Enrolements";
+import StudentEnrollment from "./Components/Enrolements_Components/StudentEnrollment";
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/final" element={<Final />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/enrolements" element={<Enrolements />} />
+        <Route path="/studentenrollment" element={<StudentEnrollment />} />
 
       </Routes>
     </BrowserRouter>

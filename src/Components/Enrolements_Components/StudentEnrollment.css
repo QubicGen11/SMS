@@ -1,0 +1,18 @@
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-container {
+    max-height: auto; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables vertical scrolling if the content exceeds the container's height */
+    padding: 16px;
+  }
+  
+  .input-field {
+    margin-bottom: 12px; /* Adds space between fields */
+  }

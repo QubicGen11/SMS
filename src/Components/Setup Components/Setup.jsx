@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 import StepIndicator from './StepIndicator';
 import axios from 'axios';
-import './Setup.css';
 
 const Setup = () => {
   const navigate = useNavigate();
