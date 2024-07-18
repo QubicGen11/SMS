@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Sidemenu from '../Sidemanu_Components/Sidemenu';
 import Header from '../Header_Components/Header';
 import StudentIndicator from './StudentIndicator';
@@ -9,73 +10,107 @@ const StudentEnrollment = () => {
     const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [formData, setFormData] = useState({
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      gender: '',
-      fatherName: '',
-      motherName: '',
-      fatherOccupation: '',
-      motherOccupation: '',
-      email: '',
-      mobileNo: '',
-      religion: '',
-      nationality: '',
-      address: ''
+        firstName: '',
+        lastName: '',
+        dateOfBirth: '',
+        gender: '',
+        fatherName: '',
+        motherName: '',
+        fatherOccupation: '',
+        motherOccupation: '',
+        email: '',
+        mobileNo: '',
+        religion: '',
+        nationality: '',
+        address: '',
+        pinCode: '',
+        state: '',
+        city: '',
+        mandal: '',
+        village: ''
     });
     const [errors, setErrors] = useState({});
     const [step, setStep] = useState(1);
     const steps = ['Personal Information', 'Academic Information', 'User Creation'];
-  
+
     const toggleSidebar = () => {
-      setSidebarOpen(!sidebarOpen);
+        setSidebarOpen(!sidebarOpen);
     };
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-      if (errors[name]) {
-        setErrors({ ...errors, [name]: '' });
-      }
-    };
-  
-    const validateForm = () => {
-      let newErrors = {};
-      // Validation logic for step 1
-      if (step === 1) {
-        if (!formData.firstName) newErrors.firstName = 'First name is required';
-        if (!formData.lastName) newErrors.lastName = 'Last name is required';
-        if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-        if (!formData.gender) newErrors.gender = 'Gender is required';
-        if (!formData.fatherName) newErrors.fatherName = 'Father\'s name is required';
-        if (!formData.motherName) newErrors.motherName = 'Mother\'s name is required';
-        if (!formData.email) newErrors.email = 'Email is required';
-        if (!formData.mobileNo) newErrors.mobileNo = 'Mobile number is required';
-        if (!formData.religion) newErrors.religion = 'Religion is required';
-        if (!formData.nationality) newErrors.nationality = 'Nationality is required';
-        if (!formData.address) newErrors.address = 'Address is required';
-      }
-      // Additional validation for other steps can be added here
-      return newErrors;
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const formErrors = validateForm();
-      if (Object.keys(formErrors).length === 0) {
-        if (step === 3) {
-          console.log("Submitting Form Data:", formData);
-          navigate('/next-path-after-submission');
-        } else {
-          setStep(step + 1);
+
+    const fetchPincodeDetails = async (pincode) => {
+        try {
+            const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
+            const data = response.data[0];
+            if (data.Status === 'Success') {
+                const { State, District, Name, Block } = data.PostOffice[0];
+                setFormData(prevData => ({
+                    ...prevData,
+                    state: State,
+                    city: District,
+                    mandal: Block,
+                    village: Name
+                }));
+            } else {
+                console.error('Invalid Pincode');
+                setFormData(prevData => ({
+                    ...prevData,
+                    state: '',
+                    city: '',
+                    mandal: '',
+                    village: ''
+                }));
+            }
+        } catch (error) {
+            console.error('Error fetching pincode data:', error);
         }
-      } else {
-        setErrors(formErrors);
-      }
     };
-  
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+        if (errors[name]) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: ''
+            }));
+        }
+        if (name === 'pinCode' && value.length === 6) {
+            fetchPincodeDetails(value);
+        }
+    };
+
+    const validateForm = () => {
+        let newErrors = {};
+        if (step === 1) {
+            // Validation logic for step 1
+            const requiredFields = ['firstName', 'lastName', 'dateOfBirth', 'gender', 'fatherName', 'motherName', 'fatherOccupation', 'motherOccupation', 'email', 'mobileNo', 'religion', 'nationality', 'address', 'pinCode', 'state', 'city', 'mandal', 'village'];
+            requiredFields.forEach(field => {
+                if (!formData[field]) newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1).replace(/[A-Z]/g, letter => ' ' + letter)} is required`;
+            });
+        }
+        return newErrors;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formErrors = validateForm();
+        if (Object.keys(formErrors).length === 0) {
+            if (step === 3) {
+                console.log("Submitting Form Data:", formData);
+                navigate('/next-path-after-submission');
+            } else {
+                setStep(step + 1);
+            }
+        } else {
+            setErrors(formErrors);
+        }
+    };
+
     const handlePrevious = () => {
-      if (step > 1) setStep(step - 1);
+        if (step > 1) setStep(step - 1);
     };
 
   return (
@@ -127,6 +162,16 @@ const StudentEnrollment = () => {
                     {errors.motherName && <p className="error text-red-500">{errors.motherName}</p>}
                   </div>
                   <div>
+                    <label htmlFor="fatherOccupation">Father Occupation*</label>
+                    <input type="text" id="fatherOccupation" name="fatherOccupation" placeholder="Father's Occupation" className="input-field bg-[#eceff7]" value={formData.fatherOccupation} onChange={handleChange} />
+                    {errors.fatherOccupation && <p className="error text-red-500">{errors.fatherOccupation}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="motherOccupation">Mother Occupation*</label>
+                    <input type="text" id="mothersOccupation" name="motherOccupation" placeholder="Mother's Occupation" className="input-field bg-[#eceff7]" value={formData.motherOccupation} onChange={handleChange} />
+                    {errors.motherOccupation && <p className="error text-red-500">{errors.motherOccupation}</p>}
+                  </div>
+                  <div>
                     <label htmlFor="email">Email*</label>
                     <input type="email" id="email" name="email" placeholder="Email" className="input-field bg-[#eceff7]" value={formData.email} onChange={handleChange} />
                     {errors.email && <p className="error text-red-500">{errors.email}</p>}
@@ -152,6 +197,34 @@ const StudentEnrollment = () => {
                     <input type="text" id="address" name="address" placeholder="Address" className="input-field bg-[#eceff7] " value={formData.address} onChange={handleChange} />
                     {errors.address && <p className="error text-red-500">{errors.address}</p>}
                   </div>
+
+                  <div>
+                                        <label htmlFor="pinCode">Pin Code*</label>
+                                        <input type="text" id="pinCode" name="pinCode" placeholder="Pin Code" className="input-field   bg-[#eceff7]" value={formData.pinCode} onChange={handleChange} />
+                                        {errors.pinCode && <p className="error text-red-500">{errors.pinCode}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="state">State*</label>
+                                        <input type="text" id="state" name="state" placeholder="State" className="input-field   bg-[#eceff7]" value={formData.state} onChange={handleChange} />
+                                        {errors.state && <p className="error text-red-500">{errors.state}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="city">City/District*</label>
+                                        <input type="text" id="city" name="city" placeholder="City/District" className="input-field   bg-[#eceff7]" value={formData.city} onChange={handleChange} />
+                                        {errors.city && <p className="error text-red-500">{errors.city}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="mandal">Mandal*</label>
+                                        <input type="text" id="mandal" name="mandal" placeholder="Mandal" className="input-field  bg-[#eceff7]" value={formData.mandal} onChange={handleChange} />
+                                        {errors.mandal && <p className="error text-red-500">{errors.mandal}</p>}
+                                    </div>
+                                    <div>
+                                    <label htmlFor="village">Village*</label>
+                                    <input type="text" id="village" name="village" placeholder="Village" className="input-field bg-[#eceff7]" value={formData.village} onChange={handleChange} />
+                                        {errors.village && <p className="error text-red-500">{errors.village}</p>}
+                                    </div>
+
+                  
                 </>}
                 {step === 2 && <>
                   <div>
@@ -169,6 +242,7 @@ const StudentEnrollment = () => {
                     <input type="text" id="identificationMarks1" name="identificationMarks1" className="input-field bg-[#eceff7]" value={formData.identificationMarks1} onChange={handleChange} />
                     {errors.identificationMarks1 && <p className="error text-red-500">{errors.identificationMarks1}</p>}
                   </div>
+
                   <div>
                     <label htmlFor="identificationMarks2">Identification Marks 2</label>
                     <input type="text" id="identificationMarks2" name="identificationMarks2" className="input-field bg-[#eceff7]" value={formData.identificationMarks2} onChange={handleChange} />
