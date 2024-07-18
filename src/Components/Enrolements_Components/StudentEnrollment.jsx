@@ -5,6 +5,8 @@ import Sidemenu from '../Sidemanu_Components/Sidemenu';
 import Header from '../Header_Components/Header';
 import StudentIndicator from './StudentIndicator';
 import './StudentEnrollment.css';
+import Student_step3 from './Student_step3';
+import Student_step2 from './Student_step2';
 
 const StudentEnrollment = () => {
     const navigate = useNavigate();
@@ -27,11 +29,27 @@ const StudentEnrollment = () => {
         state: '',
         city: '',
         mandal: '',
-        village: ''
+        village: '',
+        class: '',
+        modeOfTransportation: '',
+        identificationMarks1: '',
+        identificationMarks2: '',
+        studyCertificate: '',
+        transferCertificate: '',
+        dateOfJoining: '',
+        username: '',
+        password: '',
+        student: '',
+        admissionFee: '',
+        tuitionFee: '',
+        transportationFee: '',
+        booksFee: '',
+        uniformFee: '',
+        discussedFee: ''
     });
-    const [errors, setErrors] = useState({});
+    const [errorstwo, setErrorstwo] = useState({});
     const [step, setStep] = useState(1);
-    const steps = ['Personal Information', 'Academic Information', 'User Creation'];
+    const steps = ['Personal Information', 'Academic Information', 'Fee Details', 'User Creation'];
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
@@ -71,8 +89,8 @@ const StudentEnrollment = () => {
             ...prevData,
             [name]: value
         }));
-        if (errors[name]) {
-            setErrors(prevErrors => ({
+        if (errorstwo[name]) {
+            setErrorstwo(prevErrors => ({
                 ...prevErrors,
                 [name]: ''
             }));
@@ -85,10 +103,26 @@ const StudentEnrollment = () => {
     const validateForm = () => {
         let newErrors = {};
         if (step === 1) {
-            // Validation logic for step 1
-            const requiredFields = ['firstName', 'lastName', 'dateOfBirth', 'gender', 'fatherName', 'motherName', 'fatherOccupation', 'motherOccupation', 'email', 'mobileNo', 'religion', 'nationality', 'address', 'pinCode', 'state', 'city', 'mandal', 'village'];
+            const requiredFields = [
+                'firstName', 'lastName', 'dateOfBirth', 'gender', 'fatherName',
+                'motherName', 'fatherOccupation', 'motherOccupation', 'email',
+                'mobileNo', 'religion', 'nationality', 'address', 'pinCode', 'state',
+                'city', 'mandal', 'village'
+            ];
             requiredFields.forEach(field => {
-                if (!formData[field]) newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1).replace(/[A-Z]/g, letter => ' ' + letter)} is required`;
+                if (!formData[field]) {
+                    newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1).replace(/[A-Z]/g, letter => ' ' + letter)} is required`;
+                }
+            });
+        } else if (step === 2) {
+            const requiredFields = [
+                'class', 'modeOfTransportation', 'identificationMarks1', 'studyCertificate',
+                'transferCertificate', 'dateOfJoining'
+            ];
+            requiredFields.forEach(field => {
+                if (!formData[field]) {
+                    newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1).replace(/[A-Z]/g, letter => ' ' + letter)} is required`;
+                }
             });
         }
         return newErrors;
@@ -98,14 +132,14 @@ const StudentEnrollment = () => {
         e.preventDefault();
         const formErrors = validateForm();
         if (Object.keys(formErrors).length === 0) {
-            if (step === 3) {
+            if (step === 4) {
                 console.log("Submitting Form Data:", formData);
                 navigate('/next-path-after-submission');
             } else {
                 setStep(step + 1);
             }
         } else {
-            setErrors(formErrors);
+            setErrorstwo(formErrors);
         }
     };
 
@@ -113,179 +147,144 @@ const StudentEnrollment = () => {
         if (step > 1) setStep(step - 1);
     };
 
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidemenu sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className={`flex flex-col flex-1 w-full overflow-hidden transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
-        <Header toggleSidebar={toggleSidebar} />
-        <main className="flex flex-col flex-1 p-4 overflow-y-auto justify-center items-center bg-gray-100">
-          <div className="w-full max-w-96xl bg-white rounded-lg shadow-xl p-8 text-gray-900 form-container">
-            <StudentIndicator currentStep={step - 1} steps={steps} />
-
-            <h1 className="text-xl font-bold text-center mb-6">Student Enrollment Form</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {step === 1 && <>
-                  <div>
-                    <label htmlFor="firstName">First Name*</label>
-                    <input type="text" id="firstName" name="firstName" placeholder="First Name" className="input-field bg-[#eceff7] bg-[#eceff7]" value={formData.firstName} onChange={handleChange} />
-                    {errors.firstName && <p className="error text-red-500">{errors.firstName}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="lastName">Last Name*</label>
-                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" className="input-field bg-[#eceff7]" value={formData.lastName} onChange={handleChange} />
-                    {errors.lastName && <p className="error text-red-500">{errors.lastName}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="dateOfBirth">Date of Birth*</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth" className="input-field bg-[#eceff7]" value={formData.dateOfBirth} onChange={handleChange} />
-                    {errors.dateOfBirth && <p className="error text-red-500">{errors.dateOfBirth}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="gender">Gender*</label>
-                    <select id="gender" name="gender" className="input-field bg-[#eceff7]" value={formData.gender} onChange={handleChange}>
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    {errors.gender && <p className="error text-red-500">{errors.gender}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="fatherName">Father's Name*</label>
-                    <input type="text" id="fatherName" name="fatherName" placeholder="Father's Name" className="input-field bg-[#eceff7]" value={formData.fatherName} onChange={handleChange} />
-                    {errors.fatherName && <p className="error text-red-500">{errors.fatherName}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="motherName">Mother's Name*</label>
-                    <input type="text" id="motherName" name="motherName" placeholder="Mother's Name" className="input-field bg-[#eceff7]" value={formData.motherName} onChange={handleChange} />
-                    {errors.motherName && <p className="error text-red-500">{errors.motherName}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="fatherOccupation">Father Occupation*</label>
-                    <input type="text" id="fatherOccupation" name="fatherOccupation" placeholder="Father's Occupation" className="input-field bg-[#eceff7]" value={formData.fatherOccupation} onChange={handleChange} />
-                    {errors.fatherOccupation && <p className="error text-red-500">{errors.fatherOccupation}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="motherOccupation">Mother Occupation*</label>
-                    <input type="text" id="mothersOccupation" name="motherOccupation" placeholder="Mother's Occupation" className="input-field bg-[#eceff7]" value={formData.motherOccupation} onChange={handleChange} />
-                    {errors.motherOccupation && <p className="error text-red-500">{errors.motherOccupation}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="email">Email*</label>
-                    <input type="email" id="email" name="email" placeholder="Email" className="input-field bg-[#eceff7]" value={formData.email} onChange={handleChange} />
-                    {errors.email && <p className="error text-red-500">{errors.email}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="mobileNo">Mobile No.*</label>
-                    <input type="number" id="mobileNo" name="mobileNo" placeholder="Mobile No." className="input-field bg-[#eceff7]" value={formData.mobileNo} onChange={handleChange} />
-                    {errors.mobileNo && <p className="error text-red-500">{errors.mobileNo}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="religion"> Religion*</label>
-                    <input type="text" id="religion" name="religion" placeholder="Religion" className="input-field bg-[#eceff7] " value={formData.religion} onChange={handleChange} />
-                    {errors.religion && <p className="error text-red-500">{errors.religion}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="nationality"> Nationality*</label>
-                    <input type="text" id="nationality" name="nationality" placeholder="Nationality" className="input-field bg-[#eceff7] " value={formData.nationality} onChange={handleChange} />
-                    {errors.nationality && <p className="error text-red-500">{errors.nationality}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="mobileNo"> Address*</label>
-
-                    <input type="text" id="address" name="address" placeholder="Address" className="input-field bg-[#eceff7] " value={formData.address} onChange={handleChange} />
-                    {errors.address && <p className="error text-red-500">{errors.address}</p>}
-                  </div>
-
-                  <div>
+    return (
+        <div className="flex h-screen overflow-hidden">
+            <Sidemenu sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+            <div className={`flex flex-col flex-1 w-full overflow-hidden transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
+                <Header toggleSidebar={toggleSidebar} />
+                <main className="flex flex-col flex-1 p-4 overflow-y-auto justify-center items-center bg-gray-100">
+                    <div className="w-full max-w-96xl bg-white rounded-lg shadow-xl p-8 text-gray-900 form-container">
+                        <StudentIndicator currentStep={step - 1} steps={steps} />
+                        <h1 className="text-xl font-bold text-center mb-6">Student Enrollment Form</h1>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {step === 1 && <>
+                                    {/* Step 1 Form Fields */}
+                                    <div>
+                                        <label htmlFor="firstName">First Name*</label>
+                                        <input type="text" id="firstName" name="firstName" placeholder="First Name" className="input-field bg-[#eceff7]" value={formData.firstName} onChange={handleChange} />
+                                        {errorstwo.firstName && <p className="error text-red-500">{errorstwo.firstName}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="lastName">Last Name*</label>
+                                        <input type="text" id="lastName" name="lastName" placeholder="Last Name" className="input-field bg-[#eceff7]" value={formData.lastName} onChange={handleChange} />
+                                        {errorstwo.lastName && <p className="error text-red-500">{errorstwo.lastName}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="dateOfBirth">Date of Birth*</label>
+                                        <input type="date" id="dateOfBirth" name="dateOfBirth" className="input-field bg-[#eceff7]" value={formData.dateOfBirth} onChange={handleChange} />
+                                        {errorstwo.dateOfBirth && <p className="error text-red-500">{errorstwo.dateOfBirth}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="gender">Gender*</label>
+                                        <select id="gender" name="gender" className="input-field bg-[#eceff7]" value={formData.gender} onChange={handleChange}>
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        {errorstwo.gender && <p className="error text-red-500">{errorstwo.gender}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="fatherName">Father's Name*</label>
+                                        <input type="text" id="fatherName" name="fatherName" placeholder="Father's Name" className="input-field bg-[#eceff7]" value={formData.fatherName} onChange={handleChange} />
+                                        {errorstwo.fatherName && <p className="error text-red-500">{errorstwo.fatherName}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="motherName">Mother's Name*</label>
+                                        <input type="text" id="motherName" name="motherName" placeholder="Mother's Name" className="input-field bg-[#eceff7]" value={formData.motherName} onChange={handleChange} />
+                                        {errorstwo.motherName && <p className="error text-red-500">{errorstwo.motherName}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="fatherOccupation">Father Occupation*</label>
+                                        <input type="text" id="fatherOccupation" name="fatherOccupation" placeholder="Father's Occupation" className="input-field bg-[#eceff7]" value={formData.fatherOccupation} onChange={handleChange} />
+                                        {errorstwo.fatherOccupation && <p className="error text-red-500">{errorstwo.fatherOccupation}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="motherOccupation">Mother Occupation*</label>
+                                        <input type="text" id="motherOccupation" name="motherOccupation" placeholder="Mother's Occupation" className="input-field bg-[#eceff7]" value={formData.motherOccupation} onChange={handleChange} />
+                                        {errorstwo.motherOccupation && <p className="error text-red-500">{errorstwo.motherOccupation}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="email">Email*</label>
+                                        <input type="email" id="email" name="email" placeholder="Email" className="input-field bg-[#eceff7]" value={formData.email} onChange={handleChange} />
+                                        {errorstwo.email && <p className="error text-red-500">{errorstwo.email}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="mobileNo">Mobile No.*</label>
+                                        <input type="number" id="mobileNo" name="mobileNo" placeholder="Mobile No." className="input-field bg-[#eceff7]" value={formData.mobileNo} onChange={handleChange} />
+                                        {errorstwo.mobileNo && <p className="error text-red-500">{errorstwo.mobileNo}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="religion">Religion*</label>
+                                        <input type="text" id="religion" name="religion" placeholder="Religion" className="input-field bg-[#eceff7]" value={formData.religion} onChange={handleChange} />
+                                        {errorstwo.religion && <p className="error text-red-500">{errorstwo.religion}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="nationality">Nationality*</label>
+                                        <input type="text" id="nationality" name="nationality" placeholder="Nationality" className="input-field bg-[#eceff7]" value={formData.nationality} onChange={handleChange} />
+                                        {errorstwo.nationality && <p className="error text-red-500">{errorstwo.nationality}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="address">Address*</label>
+                                        <input type="text" id="address" name="address" placeholder="Address" className="input-field bg-[#eceff7]" value={formData.address} onChange={handleChange} />
+                                        {errorstwo.address && <p className="error text-red-500">{errorstwo.address}</p>}
+                                    </div>
+                                    <div>
                                         <label htmlFor="pinCode">Pin Code*</label>
-                                        <input type="text" id="pinCode" name="pinCode" placeholder="Pin Code" className="input-field   bg-[#eceff7]" value={formData.pinCode} onChange={handleChange} />
-                                        {errors.pinCode && <p className="error text-red-500">{errors.pinCode}</p>}
+                                        <input type="text" id="pinCode" name="pinCode" placeholder="Pin Code" className="input-field bg-[#eceff7]" value={formData.pinCode} onChange={handleChange} />
+                                        {errorstwo.pinCode && <p className="error text-red-500">{errorstwo.pinCode}</p>}
                                     </div>
                                     <div>
                                         <label htmlFor="state">State*</label>
-                                        <input type="text" id="state" name="state" placeholder="State" className="input-field   bg-[#eceff7]" value={formData.state} onChange={handleChange} />
-                                        {errors.state && <p className="error text-red-500">{errors.state}</p>}
+                                        <input type="text" id="state" name="state" placeholder="State" className="input-field bg-[#eceff7]" value={formData.state} onChange={handleChange} />
+                                        {errorstwo.state && <p className="error text-red-500">{errorstwo.state}</p>}
                                     </div>
                                     <div>
                                         <label htmlFor="city">City/District*</label>
-                                        <input type="text" id="city" name="city" placeholder="City/District" className="input-field   bg-[#eceff7]" value={formData.city} onChange={handleChange} />
-                                        {errors.city && <p className="error text-red-500">{errors.city}</p>}
+                                        <input type="text" id="city" name="city" placeholder="City/District" className="input-field bg-[#eceff7]" value={formData.city} onChange={handleChange} />
+                                        {errorstwo.city && <p className="error text-red-500">{errorstwo.city}</p>}
                                     </div>
                                     <div>
                                         <label htmlFor="mandal">Mandal*</label>
-                                        <input type="text" id="mandal" name="mandal" placeholder="Mandal" className="input-field  bg-[#eceff7]" value={formData.mandal} onChange={handleChange} />
-                                        {errors.mandal && <p className="error text-red-500">{errors.mandal}</p>}
+                                        <input type="text" id="mandal" name="mandal" placeholder="Mandal" className="input-field bg-[#eceff7]" value={formData.mandal} onChange={handleChange} />
+                                        {errorstwo.mandal && <p className="error text-red-500">{errorstwo.mandal}</p>}
                                     </div>
                                     <div>
-                                    <label htmlFor="village">Village*</label>
-                                    <input type="text" id="village" name="village" placeholder="Village" className="input-field bg-[#eceff7]" value={formData.village} onChange={handleChange} />
-                                        {errors.village && <p className="error text-red-500">{errors.village}</p>}
+                                        <label htmlFor="village">Village*</label>
+                                        <input type="text" id="village" name="village" placeholder="Village" className="input-field bg-[#eceff7]" value={formData.village} onChange={handleChange} />
+                                        {errorstwo.village && <p className="error text-red-500">{errorstwo.village}</p>}
                                     </div>
-
-                  
-                </>}
-                {step === 2 && <>
-                  <div>
-                    <label htmlFor="class">Class*</label>
-                    <input type="text" id="class" name="class" className="input-field bg-[#eceff7]" value={formData.class} onChange={handleChange} />
-                    {errors.class && <p className="error text-red-500">{errors.class}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="modeOfTransportation">Mode of Transportation*</label>
-                    <input type="text" id="modeOfTransportation" name="modeOfTransportation" className="input-field bg-[#eceff7]" value={formData.modeOfTransportation} onChange={handleChange} />
-                    {errors.modeOfTransportation && <p className="error text-red-500">{errors.modeOfTransportation}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="identificationMarks1">Identification Marks 1*</label>
-                    <input type="text" id="identificationMarks1" name="identificationMarks1" className="input-field bg-[#eceff7]" value={formData.identificationMarks1} onChange={handleChange} />
-                    {errors.identificationMarks1 && <p className="error text-red-500">{errors.identificationMarks1}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="identificationMarks2">Identification Marks 2</label>
-                    <input type="text" id="identificationMarks2" name="identificationMarks2" className="input-field bg-[#eceff7]" value={formData.identificationMarks2} onChange={handleChange} />
-                  </div>
-                  <div>
-                    <label htmlFor="studyCertificate">Study/Conduct Certificate*</label>
-                    <input type="file" id="studyCertificate" name="studyCertificate" className="input-field bg-[#eceff7]" onChange={handleChange} />
-                    {errors.studyCertificate && <p className="error text-red-500">{errors.studyCertificate}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="transferCertificate">Transfer Certificate*</label>
-                    <input type="file" id="transferCertificate" name="transferCertificate" className="input-field bg-[#eceff7]                     " onChange={handleChange} />
-                    {errors.transferCertificate && <p className="error text-red-500">{errors.transferCertificate}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="dateOfJoining">Date of Joining*</label>
-                    <input type="date" id="dateOfJoining" name="dateOfJoining" className="input-field bg-[#eceff7]" value={formData.dateOfJoining} onChange={handleChange} />
-                    {errors.dateOfJoining && <p className="error text-red-500">{errors.dateOfJoining}</p>}
-                  </div>
-                </>}
-                {step === 3 && <>
-                  <div>
-                    <label htmlFor="username">Username/Login ID*</label>
-                    <input type="text" id="username" name="username" placeholder="Username/Login ID" className="input-field bg-[#eceff7]" value={formData.username} onChange={handleChange} />
-                    {errors.username && <p className="error text-red-500">{errors.username}</p>}
-                  </div>
-                  <div>
-                    <label htmlFor="password">Password*</label>
-                    <input type="password" id="password" name="password" placeholder="Password" className="input-field bg-[#eceff7]" value={formData.password} onChange={handleChange} />
-                    {errors.password && <p className="error text-red-500">{errors.password}</p>}
-                  </div>
-                </>}
-              </div>
-              {step > 1 && (
-                <button type="button" onClick={handlePrevious} className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md mr-2">Previous</button>
-              )}
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">{step === 3 ? 'Submit' : 'Next'}</button>
-            </form>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+                                </>}
+                                {step === 2 && <>
+                                    <Student_step2 formData={formData} handleChange={handleChange} errorstwo={errorstwo} />
+                                </>}
+                                {step === 3 && <>
+                                    <Student_step3 />
+                                </>}
+                                {step === 4 && <>
+                                    <div>
+                                        <label htmlFor="username">Username/Login ID*</label>
+                                        <input type="text" id="username" name="username" placeholder="Username/Login ID" className="input-field bg-[#eceff7]" value={formData.username} onChange={handleChange} />
+                                        {errorstwo.username && <p className="error text-red-500">{errorstwo.username}</p>}
+                                    </div>
+                                    <div>
+                                        <label htmlFor="password">Password*</label>
+                                        <input type="password" id="password" name="password" placeholder="Password" className="input-field bg-[#eceff7]" value={formData.password} onChange={handleChange} />
+                                        {errorstwo.password && <p className="error text-red-500">{errorstwo.password}</p>}
+                                    </div>
+                                </>}
+                            </div>
+                            {step > 1 && (
+                                <button type="button" onClick={handlePrevious} className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md mr-2">Previous</button>
+                            )}
+                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">{step === 4 ? 'Submit' : 'Next'}</button>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default StudentEnrollment;
