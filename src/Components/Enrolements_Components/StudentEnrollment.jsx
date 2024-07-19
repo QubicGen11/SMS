@@ -7,6 +7,7 @@ import StudentIndicator from './StudentIndicator';
 import './StudentEnrollment.css';
 import Student_step3 from './Student_step3';
 import Student_step2 from './Student_step2';
+import Studends_Enroll_dropdown from './Studends_Enroll_dropdown';
 
 const StudentEnrollment = () => {
     const navigate = useNavigate();
@@ -154,6 +155,10 @@ const StudentEnrollment = () => {
                 <Header toggleSidebar={toggleSidebar} />
                 <main className="flex flex-col flex-1 p-4 overflow-y-auto justify-center items-center bg-gray-100">
                     <div className="w-full max-w-96xl bg-white rounded-lg shadow-xl p-8 text-gray-900 form-container">
+                      <div className='mb-7 hidden md:hidden lg:block '>
+
+                      <Studends_Enroll_dropdown/>
+                      </div>
                         <StudentIndicator currentStep={step - 1} steps={steps} />
                         <h1 className="text-xl font-bold text-center mb-6">Student Enrollment Form</h1>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -257,7 +262,10 @@ const StudentEnrollment = () => {
                                     </div>
                                 </>}
                                 {step === 2 && <>
+                                <div className='max-w-96xl'>
+
                                     <Student_step2 formData={formData} handleChange={handleChange} errorstwo={errorstwo} />
+                                </div>
                                 </>}
                                 {step === 3 && <>
                                     <Student_step3 />
