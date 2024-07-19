@@ -268,15 +268,17 @@ const TeacherEnrollment = () => {
                         <p className="error text-red-500">{errors.mobileNo}</p>
                       )}
                     </div>
+                    <p className="text-xl font-bold">Address</p>
+                    <div></div>
                     <div>
                       <label htmlFor="address">
-                        Address<span className="text-red-600">*</span>
+                        Address Line 1<span className="text-red-600">*</span>
                       </label>
                       <input
                         type="text"
                         id="address"
                         name="address"
-                        placeholder="Address"
+                        placeholder=" House No / Flat No & Street Name"
                         className="input-field bg-[#eceff7]"
                         value={formData.address}
                         onChange={handleChange}
@@ -291,7 +293,7 @@ const TeacherEnrollment = () => {
                         type="text"
                         id="addressLine2"
                         name="addressLine2"
-                        placeholder="Address Line 2"
+                        placeholder="Landmark"
                         className="input-field bg-[#eceff7]"
                         value={formData.addressLine2}
                         onChange={handleChange}
@@ -349,6 +351,9 @@ const TeacherEnrollment = () => {
                       )}
                     </div>
 
+                    <div></div>
+
+
                     <div>
                       <label htmlFor="religion">
                         Religion<span className="text-red-600">*</span>
@@ -386,6 +391,7 @@ const TeacherEnrollment = () => {
                         </p>
                       )}
                     </div>
+                   
                     <div>
                       <label htmlFor="fatherName">
                         Father's Name<span className="text-red-600">*</span>
@@ -462,25 +468,33 @@ const TeacherEnrollment = () => {
                         </p>
                       )}
                     </div>
+
                     <div>
-                      <label htmlFor="bloodGroup">
-                        Blood Group<span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="bloodGroup"
-                        name="bloodGroup"
-                        placeholder="Blood Group"
-                        className="input-field bg-[#eceff7]"
-                        value={formData.bloodGroup}
-                        onChange={handleChange}
-                      />
-                      {errors.bloodGroup && (
-                        <p className="error text-red-500">
-                          {errors.bloodGroup}
-                        </p>
-                      )}
-                    </div>
+  <label htmlFor="bloodGroup">
+    Blood Group<span className="text-red-600">*</span>
+  </label>
+  <select
+    id="bloodGroup"
+    name="bloodGroup"
+    className="input-field bg-[#eceff7]"
+    value={formData.bloodGroup}
+    onChange={handleChange}
+  >
+    <option value="">Select Blood Group</option>
+    <option value="A+">A+</option>
+    <option value="A-">A-</option>
+    <option value="B+">B+</option>
+    <option value="B-">B-</option>
+    <option value="AB+">AB+</option>
+    <option value="AB-">AB-</option>
+    <option value="O+">O+</option>
+    <option value="O-">O-</option>
+  </select>
+  {errors.bloodGroup && (
+    <p className="error text-red-500">{errors.bloodGroup}</p>
+  )}
+</div>
+                   
                   </>
                 )}
               </div>
