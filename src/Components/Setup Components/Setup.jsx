@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 import StepIndicator from './StepIndicator';
 import axios from 'axios';
+import './Setup.css'
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -155,8 +156,12 @@ const Setup = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="flex max-w-964xl w-full h-full">
-        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg fixed top-0 bottom-0 left-0">
-          <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" alt="QubicGen Logo" className="mb-8" />
+        <div className="hidden  md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg fixed top-0 bottom-0 left-0">
+        <img 
+  src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" 
+  alt="QubicGen Logo" 
+  className="mb-8 logo transition-transform duration-300 ease-in-out transform hover:scale-110 animate-logoInitial" 
+/>
           <h1 style={{ fontWeight: 'bold' }}>This is a test</h1>
         </div>
         <div className="w-full md:ml-96 p-4 md:p-6 h-full overflow-y-auto">

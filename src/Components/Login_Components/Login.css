@@ -1,30 +1,28 @@
 .Careersmain {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    background: url("https://res.cloudinary.com/devewerw3/image/upload/v1720423474/DALL_E_2024-07-08_12.49.03_-_A_modern_classroom_with_a_turquoise_wall_a_whiteboard_in_the_center_bookshelves_with_books_and_some_decorative_items_and_desks_arranged_in_rows._Th_t0fgqo.webp");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-  }
-  
-  .Careersmain::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.01);
-  } 
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: url("https://res.cloudinary.com/devewerw3/image/upload/v1720423474/DALL_E_2024-07-08_12.49.03_-_A_modern_classroom_with_a_turquoise_wall_a_whiteboard_in_the_center_bookshelves_with_books_and_some_decorative_items_and_desks_arranged_in_rows._Th_t0fgqo.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 
-  .blur-bg{
-    /* background-color: rgba(255, 255, 255, 0.1); */
-        background-color: rgba(0, 0, 0, 0.3);
+.Careersmain::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
 
-    backdrop-filter: blur(5px);
-  }
+.blur-bg {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
 
-  /* Add these styles to your Login.css or equivalent file */
+/* Add these styles to your Login.css or equivalent file */
 .modal {
   position: absolute;
   top: 50%;
@@ -49,4 +47,42 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.75);
   z-index: 999; /* Ensure the overlay has a high z-index */
+}
+
+/* Additional animations */
+input {
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Custom Cursor */
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out, width 0.1s ease-out, height 0.1s ease-out;
+}
+
+body:hover #cursor {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.4);
 }
