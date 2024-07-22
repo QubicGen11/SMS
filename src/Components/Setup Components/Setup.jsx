@@ -261,7 +261,7 @@ const Setup = () => {
     value={formData.schoolType}
     onChange={handleChange}
   >
-    <option value="" disabled>
+    <option value="" >
       Select Type of School
     </option>
     <option value="primary">Residential</option>
@@ -280,7 +280,7 @@ const Setup = () => {
     value={formData.schoolType}
     onChange={handleChange}
   >
-    <option value="" disabled>
+    <option value="">
       Select Type of Syllabus
     </option>
     <option value="primary">CBSE</option>
