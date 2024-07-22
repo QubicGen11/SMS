@@ -277,7 +277,7 @@ const Setup = () => {
   <select
     name="schoolType"
     className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
-    value={formData.schoolType}
+    value={formData.syallabusType}
     onChange={handleChange}
   >
     <option value="">
