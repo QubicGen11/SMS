@@ -262,7 +262,7 @@ const Setup = () => {
     onChange={handleChange}
   >
     <option value="" >
-      Select Type of School
+      Select Org Type
     </option>
     <option value="primary">Residential</option>
     <option value="secondary">Non Residential</option>
@@ -281,7 +281,7 @@ const Setup = () => {
     onChange={handleChange}
   >
     <option value="">
-      Select Type of Syllabus
+      Select Syllabus Type
     </option>
     <option value="primary">CBSE</option>
     <option value="secondary">State Board</option>
