@@ -118,7 +118,7 @@ const Dbmain = () => {
       <Link
         to="/announcements"
         className="transition-transform duration-300 ease-in-out transform hover:scale-105 flex flex-col items-center justify-center p-4 bg-white border border-gray-200 w-10/12 rounded-3xl shadow-md hover:shadow-xl"
-        ref={(el) => linksRef.current[10] = el}
+        ref={(el) => linksRef.current[11] = el}
       >
         <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720772183/Settings_boymis.png" className='w-24' alt="" />
         <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg font-semibold">Settings</span>

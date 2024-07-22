@@ -6,6 +6,7 @@ import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 import StepIndicator from './StepIndicator';
 import axios from 'axios';
 import './Setup.css'
+import { FaInfoCircle } from 'react-icons/fa';
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -162,15 +163,47 @@ const Setup = () => {
   alt="QubicGen Logo" 
   className="mb-8 logo transition-transform duration-300 ease-in-out transform hover:scale-110 animate-logoInitial" 
 />
-          <h1 style={{ fontWeight: 'bold' }}>This is a test</h1>
+          <h1  className='text-2xl font-normal'>Unlock Your Thoughts</h1>
         </div>
         <div className="w-full md:ml-96 p-4 md:p-6 h-full overflow-y-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">SetUp Your Account</h1>
           <StepIndicator steps={steps} currentStep={currentStep} />
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <h1 className='text-2xl font-bold'>Tell us a bit about you</h1>
+            <div></div>
+            <div>
+      <label className="block text-xs md:text-sm font-medium text-gray-700">
+        Organization Name<span className="text-red-500">*</span>
+        <span className="relative group">
+          <FaInfoCircle className="ml-2 text-gray-500 inline-block cursor-pointer" />
+          <span className="absolute left-0 bottom-full mb-1 hidden w-32 h-6 text-xs bg-[#ffffff] text-black text-center py-1 px-2 rounded-md group-hover:block">
+            Test 1
+          </span>
+        </span>
+      </label>
+      <input
+        type="text"
+        name="organizationName"
+        className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+        value={formData.organizationName}
+        onChange={handleChange}
+      />
+      {errors.organizationName && <span className="text-red-500 text-xs">{errors.organizationName}</span>}
+    </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Registration Person Name<span className='text-red-500'>*</span></label>
+              <input
+                type="text"
+                name="founderName"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.founderName}
+                onChange={handleChange}
+              />
+              {errors.founderName && <span className="text-red-500 text-xs">{errors.founderName}</span>}
+            </div>
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">
-                First Name <span className='text-red-600'>*</span>
+               Founder First Name <span className='text-red-600'>*</span>
               </label>
               <input
                 type="text"
@@ -182,7 +215,7 @@ const Setup = () => {
               {errors.firstName && <span className="text-red-500 text-xs">{errors.firstName}</span>}
             </div>
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Last Name<span className='text-red-500'>*</span></label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700"> Founder Last Name<span className='text-red-500'>*</span></label>
               <input
                 type="text"
                 name="lastName"
@@ -192,56 +225,92 @@ const Setup = () => {
               />
               {errors.lastName && <span className="text-red-500 text-xs">{errors.lastName}</span>}
             </div>
-            <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Name<span className='text-red-500'>*</span></label>
-              <input
-                type="text"
-                name="organizationName"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
-                value={formData.organizationName}
-                onChange={handleChange}
-              />
-                      {errors.organizationName && <span className="text-red-500 text-xs">{errors.organizationName}</span>}
-            </div>
-            <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Founder Name<span className='text-red-500'>*</span></label>
-              <input
-                type="text"
-                name="founderName"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
-                value={formData.founderName}
-                onChange={handleChange}
-              />
-              {errors.founderName && <span className="text-red-500 text-xs">{errors.founderName}</span>}
-            </div>
+            
+           
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">Mobile Number<span className='text-red-500'>*</span></label>
               <input
                 type="number"
                 name="mobileNumber"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                placeholder='Organization Mobile Number'
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md  placeholder:text-xs"
                 value={formData.mobileNumber}
                 onChange={handleChange}
               />
               {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
             </div>
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Organization Email<span className='text-red-500'>*</span></label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Email<span className='text-red-500'>*</span></label>
               <input
                 type="email"
                 name="email"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                placeholder='Organization email'
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md placeholder:text-xs"
                 value={formData.email}
                 onChange={handleChange}
               />
               {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
             </div>
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Address<span className='text-red-500'>*</span></label>
+  <label className="block text-xs md:text-sm font-medium text-gray-700">
+    Type of School<span className="text-red-500">*</span>
+  </label>
+  <select
+    name="schoolType"
+    className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+    value={formData.schoolType}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      Select Type of School
+    </option>
+    <option value="primary">Residential</option>
+    <option value="secondary">Non Residential</option>
+
+  </select>
+  {errors.schoolType && <span className="text-red-500 text-xs">{errors.schoolType}</span>}
+</div>
+            <div>
+  <label className="block text-xs md:text-sm font-medium text-gray-700">
+    Syllabus Type<span className="text-red-500">*</span>
+  </label>
+  <select
+    name="schoolType"
+    className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+    value={formData.schoolType}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      Select Type of Syllabus
+    </option>
+    <option value="primary">CBSE</option>
+    <option value="secondary">State Board</option>
+    <option value="secondary">ICSC </option>
+
+  </select>
+  {errors.schoolType && <span className="text-red-500 text-xs">{errors.schoolType}</span>}
+</div>
+            <h1 className='text-2xl font-bold'>Head Office Address</h1>
+            <div></div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Address Line 1<span className='text-red-500'>*</span></label>
               <input
                 type="text"
                 name="address"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md placeholder:text-xs"
+                placeholder='Door No / Building No and Street Name'
+                value={formData.address}
+                onChange={handleChange}
+              />
+              {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Address Line 2</label>
+              <input
+                type="text"
+                name="address"
+                placeholder='Landmark'
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md placeholder:text-xs"
                 value={formData.address}
                 onChange={handleChange}
               />
@@ -252,7 +321,8 @@ const Setup = () => {
               <input
                 type="text"
                 name="pinCode"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                placeholder='Postal ZIP Code'
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md placeholder:text-xs"
                 value={formData.pinCode}
                 onChange={handleChange}
               />

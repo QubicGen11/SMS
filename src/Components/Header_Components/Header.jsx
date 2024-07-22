@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaBars, FaBell, FaSearch, FaTimes } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import gsap from 'gsap';
+
 
 const Header = ({ toggleSidebar }) => {
   const [searchValue, setSearchValue] = useState('');
   const [searchOpen, setSearchOpen] = useState(window.innerWidth >= 1280);
   const location = useLocation();
+  const headerRef = useRef(null);
+  const searchRef = useRef(null);
+  const avatarRef = useRef(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,6 +24,22 @@ const Header = ({ toggleSidebar }) => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1 });
+    gsap.from(searchRef.current, { opacity: 0, scale: 0, duration: 1, delay: 0.5 });
+    gsap.from(avatarRef.current, { opacity: 0, x: 50, duration: 1, delay: 1 });
+  }, []);
+
+  const handleSearchToggle = () => {
+    setSearchOpen((prev) => !prev);
+    if (!searchOpen) {
+      gsap.from(searchRef.current, { opacity: 0, scale: 0, duration: 0.5 });
+    } else {
+      gsap.to(searchRef.current, { opacity: 0, scale: 0, duration: 0.5 });
+    }
+  };
+
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -70,7 +92,7 @@ const Header = ({ toggleSidebar }) => {
         <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
           <FaBell className="text-gray-300" />
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2"  ref={avatarRef}>
             <img
               src="https://res.cloudinary.com/defsu5bfc/image/upload/v1714828410/logo_3_jizb6b.png"
               alt="User avatar"
