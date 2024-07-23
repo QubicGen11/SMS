@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../Modal Components/Modal'; // Adjust the path if necessary
 import StepIndicator from './StepIndicator';
+import './SetupThree.css';
+
 const SetupThree = () => {
   const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
   const currentStep = 1; // Set this dynamically as per your logic
@@ -11,14 +13,18 @@ const SetupThree = () => {
   const [branchDetails, setBranchDetails] = useState([]);
   const [formData, setFormData] = useState({
     branchName: '',
+    managerName: '',
     mobileNumber: '',
     email: '',
-    address: '',
+    schoolType: '',
+    syallabusType: '',
+    addresslineone: '',
+    addreslinetwo: '',
+    pinCode: '',
+    village: '',
+    mandal: '',
     city: '',
     state: '',
-    pinCode: '',
-    mandal: '',
-    village: '',
   });
   const [errors, setErrors] = useState({});
 
@@ -69,6 +75,7 @@ const SetupThree = () => {
   const validateForm = () => {
     let formErrors = {};
     if (!formData.branchName) formErrors.branchName = 'Branch Name is required';
+    if (!formData.managerName) formErrors.managerName = 'Manager Name is required';
     if (!formData.mobileNumber) {
       formErrors.mobileNumber = 'Mobile Number is required';
     } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
@@ -79,7 +86,7 @@ const SetupThree = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       formErrors.email = 'Email is invalid';
     }
-    if (!formData.address) formErrors.address = 'Address is required';
+    if (!formData.addresslineone) formErrors.addresslineone = 'Address Line 1 is required';
     if (!formData.city) formErrors.city = 'City is required';
     if (!formData.state) formErrors.state = 'State is required';
     if (!formData.pinCode) {
@@ -108,14 +115,18 @@ const SetupThree = () => {
       localStorage.setItem('branchDetails', JSON.stringify(updatedDetails));
       setFormData({
         branchName: '',
+        managerName: '',
         mobileNumber: '',
         email: '',
-        address: '',
+        schoolType: '',
+        syallabusType: '',
+        addresslineone: '',
+        addreslinetwo: '',
+        pinCode: '',
+        village: '',
+        mandal: '',
         city: '',
         state: '',
-        pinCode: '',
-        mandal: '',
-        village: '',
       });
       setShowModal(false);
     } else {
@@ -138,20 +149,20 @@ const SetupThree = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg max-w-96xl w-full flex md:flex-row h-[90vh]">
+      <div className="bg-white rounded-lg shadow-lg max-w-96xl w-full flex md:flex-row h-[80vh] overflow-auto">
         <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] w-[40vw] text-white p-8 w-96 rounded-l-lg">
-          <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720606348/Registration_Page_02_hi8a4m.gif" alt="QubicGen Logo" className="mb-8" />
+          <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720606348/Registration_Page_02_hi8a4m.gif" alt="QubicGen Logo" className="mb-8 animate__animated animate__fadeInLeft" />
         </div>
         <div className="w-full md:w-3/4 p-4 md:p-6 h-full overflow-y-auto">
-          <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">Set Up Your Account</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center animate__animated animate__fadeInDown">Set Up Your Account</h1>
           <StepIndicator steps={steps} currentStep={currentStep} />
 
-          <div className="text-center text-lg md:text-xl font-bold mb-4">Total No. Of Branches: {branchDetails.length}</div>
+          <div className="text-center text-lg md:text-xl font-bold mb-4 animate__animated animate__fadeInUp">Total No. Of Branches: {branchDetails.length}</div>
           <div className="text-center mb-8">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-full mb-2" onClick={() => setShowModal(true)}>+</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-full mb-2 animate__animated animate__fadeInUp" onClick={() => setShowModal(true)}>+</button>
             <div>Add Branch</div>
           </div>
-          <div className="mt-8">
+          <div className="mt-8 animate__animated animate__fadeInUp">
             <h2 className="text-xl font-bold mb-4">Branch List</h2>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
@@ -181,7 +192,7 @@ const SetupThree = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-between mt-8">
+          <div className="flex justify-between mt-8 animate__animated animate__fadeInUp">
             <Link to="/setup">
               <button className="bg-[#00274D] text-white px-4 py-2 rounded-md">Previous</button>
             </Link>
@@ -194,53 +205,116 @@ const SetupThree = () => {
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <h2 className="text-xl font-bold mb-4">{isEditMode ? "Edit Branch" : "Add Branch"}</h2>
         <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSave}>
+          <h1 className='md:text-2xl w-96 font-bold'>Tell us a bit about your branch</h1>
+          <div></div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Branch Name</label>
+            <label className="block text-sm font-medium text-gray-700">Name</label>
             <input
               type="text"
               name="branchName"
-              placeholder="Branch Name"
+              placeholder="Enter Branch Name"
               value={formData.branchName}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7] placeholder:text-sm"
             />
             {errors.branchName && <span className="text-red-500 text-xs">{errors.branchName}</span>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
+            <label className="block text-sm font-medium text-gray-700">Manager Name</label>
+            <input
+              type="text"
+              name="managerName"
+              placeholder="Enter Manager Name"
+              value={formData.managerName}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7] placeholder:text-sm"
+            />
+            {errors.managerName && <span className="text-red-500 text-xs">{errors.managerName}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Contact Number</label>
             <input
               type="text"
               name="mobileNumber"
-              placeholder="Mobile Number"
+              placeholder="Enter Branch Contact Number"
               value={formData.mobileNumber}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7] placeholder:text-sm"
             />
-                       {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+            {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="text"
               name="email"
-              placeholder="Organization Email"
+              placeholder="Enter Branch Email" 
               value={formData.email}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7] placeholder:text-sm"
             />
             {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Address</label>
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
+              Branch Type<span className="text-red-500">*</span>
+            </label>
+            <select
+              name="schoolType"
+              className="mt-1 block w-full p-1 md:p-2 text-sm border border-gray-300 rounded-md bg-[#eceff7]"
+              value={formData.schoolType}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Org Type</option>
+              <option value="residential">Residential</option>
+              <option value="non-residential">Non Residential</option>
+            </select>
+            {errors.schoolType && <span className="text-red-500 text-xs">{errors.schoolType}</span>}
+          </div>
+          <div>
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
+              Syllabus Type<span className="text-red-500">*</span>
+            </label>
+            <select
+              name="syallabusType"
+              className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md bg-[#eceff7] text-sm"
+              value={formData.syallabusType}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Syllabus Type</option>
+              <option value="cbse">CBSE</option>
+              <option value="state-board">State Board</option>
+              <option value="icsc">ICSC</option>
+            </select>
+            {errors.syallabusType && <span className="text-red-500 text-xs">{errors.syallabusType}</span>}
+          </div>
+          
+          <h1 className='text-xl font-bold'>Address</h1>
+          <div></div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Address Line 1</label>
             <input
               type="text"
-              name="address"
+              name="addresslineone"
               placeholder="Enter Address"
-              value={formData.address}
+              value={formData.addresslineone}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
-            {errors.address && <span className="text-red-500 text-xs">{errors.address}</span>}
+            {errors.addresslineone && <span className="text-red-500 text-xs">{errors.addresslineone}</span>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Address Line 2</label>
+            <input
+              type="text"
+              name="addreslinetwo"
+              placeholder="Enter Address"
+              value={formData.addreslinetwo}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
+            />
+            {errors.addreslinetwo && <span className="text-red-500 text-xs">{errors.addreslinetwo}</span>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Pin Code</label>
@@ -250,7 +324,7 @@ const SetupThree = () => {
               placeholder="Enter Pin Code"
               value={formData.pinCode}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
             {errors.pinCode && <span className="text-red-500 text-xs">{errors.pinCode}</span>}
           </div>
@@ -262,7 +336,7 @@ const SetupThree = () => {
               placeholder="Enter Village"
               value={formData.village}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
             {errors.village && <span className="text-red-500 text-xs">{errors.village}</span>}
           </div>
@@ -274,7 +348,7 @@ const SetupThree = () => {
               placeholder="Enter Mandal"
               value={formData.mandal}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
             {errors.mandal && <span className="text-red-500 text-xs">{errors.mandal}</span>}
           </div>
@@ -286,7 +360,7 @@ const SetupThree = () => {
               placeholder="Enter City"
               value={formData.city}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
             {errors.city && <span className="text-red-500 text-xs">{errors.city}</span>}
           </div>
@@ -298,14 +372,15 @@ const SetupThree = () => {
               placeholder="Enter State"
               value={formData.state}
               onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-blue-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-[#eceff7]"
             />
             {errors.state && <span className="text-red-500 text-xs">{errors.state}</span>}
           </div>
-          
-        
         </form>
-        <div className="text-right mt-4">
+        <div className="flex justify-end mt-4 space-x-2">
+          {/* <button className="bg-gray-500 text-white px-4 py-2 rounded-md" onClick={() => setShowModal(false)}>
+            Cancel
+          </button> */}
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSave}>
             {isEditMode ? 'Update' : 'Save'}
           </button>
@@ -316,3 +391,4 @@ const SetupThree = () => {
 };
 
 export default SetupThree;
+             

@@ -275,7 +275,7 @@ const Setup = () => {
     Syllabus Type<span className="text-red-500">*</span>
   </label>
   <select
-    name="schoolType"
+    name="syallabusType"
     className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
     value={formData.syallabusType}
     onChange={handleChange}
