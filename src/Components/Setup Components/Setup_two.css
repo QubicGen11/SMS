@@ -1,0 +1,99 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+  }
+  
+  .sidebar {
+    display: none;
+    background-color: #00274D;
+    color: white;
+    padding: 2rem;
+    width: 25%;
+  }
+  
+  .sidebar img {
+    margin-bottom: 2rem;
+  }
+  
+  .main-content {
+    width: 75%;
+    padding: 2rem;
+    background-color: white;
+  }
+  
+  .main-content h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  .main-content .step-indicator {
+    margin-bottom: 2rem;
+  }
+  
+  .main-content .summary {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+  }
+  
+  .main-content .summary div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .main-content .summary .total {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .main-content .payment-methods {
+    margin-bottom: 2rem;
+  }
+  
+  .main-content .payment-methods label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .main-content .payment-methods input {
+    margin-right: 0.5rem;
+  }
+  
+  .main-content .payment-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-content .payment-details label {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .main-content .payment-details input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+  }
+  
+  .main-content .next-button {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .main-content .next-button button {
+    background-color: #00274D;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+  }

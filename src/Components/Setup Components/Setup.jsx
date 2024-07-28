@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaCheck, FaTimes, FaEye, FaEyeSlash, FaInfoCircle } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
 import StepIndicator from './StepIndicator';
 import axios from 'axios';
 import './Setup.css';
+import LogoUpload from './LogoUpload'; // Import the LogoUpload component
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -43,10 +44,8 @@ const Setup = () => {
       validatePasswordStrength(value);
     }
 
-    if (name === 'pincode') {
-      if (value.length === 6) {
-        fetchPincodeDetails(value);
-      }
+    if (name === 'pincode' && value.length === 6) {
+      fetchPincodeDetails(value);
     }
 
     // Remove error for the field being updated
@@ -61,14 +60,14 @@ const Setup = () => {
       const data = response.data[0];
       if (data.Status === 'Success') {
         const { State, District, Block, Name } = data.PostOffice[0];
-        setFormData({
-          ...formData,
+        setFormData((prevFormData) => ({
+          ...prevFormData,
           state: State,
           city: District,
           mandal: Block,
           village: Name,
           pincode: pincode,
-        });
+        }));
       } else {
         toast.error('Invalid Pincode');
       }
@@ -102,11 +101,11 @@ const Setup = () => {
     if (!formData.founderFirstName) formErrors.founderFirstName = "Founder First Name is required";
     if (!formData.founderLastName) formErrors.founderLastName = "Founder Last Name is required";
     if (!formData.mobileNumber) formErrors.mobileNumber = "Mobile Number is required";
-    if (!formData.email) {
-      formErrors.email = "Organization Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      formErrors.email = "Organization Email is invalid";
-    }
+    // if (!formData.email) {
+    //   formErrors.email = "Organization Email is required";
+    // } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    //   formErrors.email = "Organization Email is invalid";
+    // }
     if (!formData.addressLine1) formErrors.addressLine1 = "Address Line 1 is required";
     if (!formData.city) formErrors.city = "City is required";
     if (!formData.state) formErrors.state = "State is required";
@@ -128,19 +127,8 @@ const Setup = () => {
     e.preventDefault();
     const formErrors = validateForm();
     if (Object.keys(formErrors).length === 0) {
-      const branchDetails = {
-        branchName: formData.organizationName,
-        mobileNumber: formData.mobileNumber,
-        email: formData.email,
-        address: formData.addressLine1,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-        mandal: formData.mandal,
-        village: formData.village,
-      };
-      localStorage.setItem('branchDetails', JSON.stringify([branchDetails]));
-      navigate('/setupthree');
+      localStorage.setItem('branchDetails', JSON.stringify([formData]));
+      navigate('/setupconfirmation');
     } else {
       setErrors(formErrors);
       Object.values(formErrors).forEach(error => toast.error(error));
@@ -159,7 +147,7 @@ const Setup = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="flex max-w-964xl w-full h-full">
-        <div className="hidden  md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg fixed top-0 bottom-0 left-0">
+        <div className="hidden md:flex flex-col justify-center items-center bg-[#00274D] text-white p-8 w-96 rounded-l-lg fixed top-0 bottom-0 left-0">
           <img
             src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png"
             alt="QubicGen Logo"
@@ -172,7 +160,9 @@ const Setup = () => {
           <StepIndicator steps={steps} currentStep={currentStep} />
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <h1 className='text-2xl font-bold'>Tell us a bit about you</h1>
-            <div></div>
+            <div className="col-span-1 md:col-span-2">
+              <LogoUpload />
+            </div>
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">
                 Organization Name<span className="text-red-500">*</span>
@@ -201,10 +191,7 @@ const Setup = () => {
               <label className="block text-xs md:text-sm font-medium text-gray-700">
                 Founder First Name <span className='text-red-600'>*</span>
               </label>
-              <input
-                type="text"
-                name="founderFirstName"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+             <input type='text' name="founderFirstName" className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
                 value={formData.founderFirstName}
                 onChange={handleChange}
               />
@@ -222,6 +209,32 @@ const Setup = () => {
                 onChange={handleChange}
               />
               {errors.founderLastName && <span className="text-red-500 text-xs">{errors.founderLastName}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">
+                Mobile Number <span className='text-red-500'>*</span>
+              </label>
+              <input
+                type="text"
+                name="mobileNumber"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+              />
+              {errors.mobileNumber && <span className="text-red-500 text-xs">{errors.mobileNumber}</span>}
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">
+                Founder Email<span className='text-red-500'>*</span>
+              </label>
+              <input
+                type="email"
+                name="founderEmail"
+                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                value={formData.founderEmail}
+                onChange={handleChange}
+              />
+              {errors.founderEmail && <span className="text-red-500 text-xs">{errors.founderEmail}</span>}
             </div>
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">
@@ -376,9 +389,9 @@ const Setup = () => {
                   name="founderPassword"
                   value={formData.founderPassword}
                   onChange={handleChange}
-                  className=' block w-full p-1 md:p-2 border border-gray-300 rounded-md'
+                  className='block w-full p-1 md:p-2 border border-gray-300 rounded-md'
                 />
-                <span
+                                <span
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                   onClick={() => setPasswordVisible(!passwordVisible)}
                 >
@@ -395,15 +408,15 @@ const Setup = () => {
               </div>
             </div>
 
-<div className="col-span-1 md:col-span-2 flex justify-end">
-<button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
-</div>
-</form>
-</div>
-</div>
-<ToastContainer />
-</div>
-);
+            <div className="col-span-1 md:col-span-2 flex justify-end">
+              <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Next</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <ToastContainer />
+    </div>
+  );
 };
 
 export default Setup;

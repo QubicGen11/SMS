@@ -38,7 +38,6 @@ const Dashboard = () => {
     // Grid animation
     tl.from(gridRef.current, {
       y: 50,
-   
       opacity: 0,
       duration: 0.5,
       ease: 'power3.out'
@@ -70,10 +69,8 @@ const Dashboard = () => {
             <h1 className="font-bold text-base">Hello, QubicGen</h1>
             <h1 className="font-light text-xs">Have a nice day</h1>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" ref={gridRef}>
-              <Dbmain />
-            <div >
-            </div>
+          <div className="grid grid-cols-2 gap-4  lg:grid-cols-3 xl:grid-cols-4" ref={gridRef}>
+            <Dbmain />
           </div>
         </main>
       </div>
