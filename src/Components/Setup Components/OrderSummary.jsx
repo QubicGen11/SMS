@@ -3,7 +3,7 @@ import StepIndicator from './StepIndicator';
 import { Link } from 'react-router-dom';
 
 const OrderSummary = () => {
-  const steps = ['Create Organization', 'Preview', 'Payment', 'Finish'];
+  const steps = ['Organization', 'Preview', 'Payment', 'Finish'];
   const currentStep = 2; // Set this dynamically as per your logic
   const [branchDetails, setBranchDetails] = useState({});
   const [logo, setLogo] = useState('');
@@ -52,21 +52,7 @@ const OrderSummary = () => {
             </div>
           </div>
 
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-4">
-            <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-            <div className="flex justify-between mb-2">
-              <p className="text-sm">Sub Total</p>
-              <p className="text-sm">Rs. 6,000.00</p>
-            </div>
-            <div className="flex justify-between mb-2">
-              <p className="text-sm">Discount</p>
-              <p className="text-sm">Coupon Code - Rs. 6,000.00</p>
-            </div>
-            <div className="flex justify-between font-bold">
-              <p className="text-sm">Total</p>
-              <p className="text-sm">Rs. 0</p>
-            </div>
-          </div>
+        
 
           <div className="flex flex-col lg:flex-row justify-between">
             <div className="bg-white shadow-lg rounded-lg p-6 w-full lg:w-1/2 mb-4 lg:mb-0 lg:mr-2">
@@ -92,6 +78,23 @@ const OrderSummary = () => {
             <p className="text-sm">{branchDetails.addressLine2}</p>
             <p className="text-sm">{branchDetails.city}, {branchDetails.state}, {branchDetails.pincode}</p>
           </div>
+          <div></div>
+          <div className="bg-white shadow-lg rounded-lg p-6 mt-3">
+            <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm">Sub Total</p>
+              <p className="text-sm">Rs. 6,000.00</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm">Discount</p>
+              <p className="text-sm">Coupon Code - Rs. 6,000.00</p>
+            </div>
+            <div className="flex justify-between font-bold">
+              <p className="text-sm">Total</p>
+              <p className="text-sm">Rs. 0</p>
+            </div>
+          </div>
+
 
           <div className="flex justify-center mt-8">
             <Link to="/final">

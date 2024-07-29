@@ -33,24 +33,24 @@ const SetupConfirmation = () => {
           <StepIndicator steps={steps} currentStep={currentStep} />
 
           <div className="mt-8">
-            <h2 className="text-2xl text-center font-bold mb-4">Confirm Your Details</h2>
+            <h2 className="text-2xl text-center mr-56 font-bold mb-4">Confirm Your Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div><strong>Organization Name:</strong> {branchDetails.organizationName}</div>
-              <div><strong>Registering Person Name:</strong> {branchDetails.registerPersonName}</div>
-              <div><strong>Founder First Name:</strong> {branchDetails.founderFirstName}</div>
-              <div><strong>Founder Last Name:</strong> {branchDetails.founderLastName}</div>
-              <div><strong>Mobile Number:</strong> {branchDetails.mobileNumber}</div>
-              <div><strong>Email:</strong> {branchDetails.email}</div>
-              <div><strong>Type of School:</strong> {branchDetails.typeOfSchool}</div>
-              <div><strong>Syllabus Type:</strong> {branchDetails.syllubusType}</div>
-              <div><strong>Address Line 1:</strong> {branchDetails.addressLine1}</div>
-              <div><strong>Address Line 2:</strong> {branchDetails.addressLine2}</div>
-              <div><strong>Pin Code:</strong> {branchDetails.pincode}</div>
-              <div><strong>City:</strong> {branchDetails.city}</div>
-              <div><strong>State:</strong> {branchDetails.state}</div>
-              <div><strong>Mandal:</strong> {branchDetails.mandal}</div>
-              <div><strong>Village:</strong> {branchDetails.village}</div>
-              <div><strong>Founder Email:</strong> {branchDetails.founderEmail}</div>
+              <div className='text-sm'><span className='text-base font-bold'>Organization Name:</span> {branchDetails.organizationName}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Registering Person Name:</span> {branchDetails.registerPersonName}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Founder First Name:</span> {branchDetails.founderFirstName}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Founder Last Name:</span> {branchDetails.founderLastName}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Mobile Number:</span> {branchDetails.mobileNumber}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Email:</span> {branchDetails.founderEmail}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Type of School:</span> {branchDetails.typeOfSchool}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Syllabus Type:</span> {branchDetails.syllubusType}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Address Line 1:</span> {branchDetails.addressLine1}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Address Line 2:</span> {branchDetails.addressLine2}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Pin Code:</span> {branchDetails.pincode}</div>
+               <div className='text-sm'><span className='text-base font-bold'>City:</span> {branchDetails.city}</div>
+               <div className='text-sm'><span className='text-base font-bold'>State:</span> {branchDetails.state}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Mandal:</span> {branchDetails.mandal}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Village:</span> {branchDetails.village}</div>
+               <div className='text-sm'><span className='text-base font-bold'>Founder Email:</span> {branchDetails.founderEmail}</div>
             </div>
           </div>
 

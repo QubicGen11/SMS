@@ -33,7 +33,7 @@ const Setup = () => {
   const [passwordStrength, setPasswordStrength] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const steps = ['Organization', 'Create Branch', 'Payment', 'Finish'];
+  const steps = ['Organization', 'Preview', 'Payment', 'Finish'];
   const currentStep = 0; // Set this dynamically as per your logic
 
   const handleChange = (e) => {
@@ -101,6 +101,11 @@ const Setup = () => {
     if (!formData.founderFirstName) formErrors.founderFirstName = "Founder First Name is required";
     if (!formData.founderLastName) formErrors.founderLastName = "Founder Last Name is required";
     if (!formData.mobileNumber) formErrors.mobileNumber = "Mobile Number is required";
+    if (!formData.typeOfSchool) formErrors.typeOfSchool = "Select Type of School";
+    if (!formData.syllubusType) formErrors.syllubusType = "Select Syllabus";
+
+    // syllubusType: '',
+
     // if (!formData.email) {
     //   formErrors.email = "Organization Email is required";
     // } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -177,7 +182,7 @@ const Setup = () => {
               {errors.organizationName && <span className="text-red-500 text-xs">{errors.organizationName}</span>}
             </div>
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-700">Register Person Name<span className='text-red-500'>*</span></label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Registering Person Name<span className='text-red-500'>*</span></label>
               <input
                 type="text"
                 name="registerPersonName"
@@ -217,7 +222,8 @@ const Setup = () => {
               <input
                 type="text"
                 name="mobileNumber"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                placeholder='Organization Mobile Number'
+                className="mt-1 block w-full p-1 md:p-2 border placeholder:text-xs border-gray-300 rounded-md"
                 value={formData.mobileNumber}
                 onChange={handleChange}
               />
@@ -230,7 +236,8 @@ const Setup = () => {
               <input
                 type="email"
                 name="founderEmail"
-                className="mt-1 block w-full p-1 md:p-2 border border-gray-300 rounded-md"
+                placeholder='Organization email'
+                className="mt-1 block w-full p-1 placeholder:text-xs md:p-2 border border-gray-300 rounded-md"
                 value={formData.founderEmail}
                 onChange={handleChange}
               />
@@ -315,7 +322,7 @@ const Setup = () => {
             </div>
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">
-                City<span className='text-red-500'>*</span>
+                City/Village<span className='text-red-500'>*</span>
               </label>
               <input
                 type="text"
@@ -352,7 +359,7 @@ const Setup = () => {
               />
               {errors.mandal && <span className="text-red-500 text-xs">{errors.mandal}</span>}
             </div>
-            <div>
+            {/* <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700">
                 Village<span className='text-red-500'>*</span>
               </label>
@@ -364,7 +371,7 @@ const Setup = () => {
                 onChange={handleChange}
               />
               {errors.village && <span className="text-red-500 text-xs">{errors.village}</span>}
-            </div>
+            </div> */}
             <div className="col-span-1 md:col-span-2 mt-2 md:mt-4">
               <h2 className="text-lg md:text-xl font-bold">Credentials</h2>
             </div>
@@ -414,7 +421,7 @@ const Setup = () => {
           </form>
         </div>
       </div>
-      <ToastContainer />
+   
     </div>
   );
 };

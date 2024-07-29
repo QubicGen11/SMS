@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const LogoUpload = () => {
-  const [logo, setLogo] = useState(() => localStorage.getItem('logo') || '/mnt/data/AD82DDE6-BCD9-4BB5-8D1F-10E84E29038D.png');
+  const [logo, setLogo] = useState(() => localStorage.getItem('logo') || 'https://res.cloudinary.com/devewerw3/image/upload/v1722230790/school_okuhs4.png');
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
@@ -18,7 +18,7 @@ const LogoUpload = () => {
   return (
     <div className="flex flex-col items-center mb-8">
       <label htmlFor="logo-upload" className="cursor-pointer">
-        <img src={logo} alt="Logo" className="rounded-full w-24 h-24 md:w-32 md:h-32 mb-2" />
+        <img src={logo} alt="Logo" className=" w-24 h-24 md:w-20 md:h-20 mb-2 bg-cover" />
         <input
           type="file"
           id="logo-upload"
