@@ -164,7 +164,7 @@ const Setup = () => {
           <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-center">SetUp Your Account</h1>
           <StepIndicator steps={steps} currentStep={currentStep} />
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <h1 className='text-2xl font-bold'>Tell us a bit about you</h1>
+            <h1 className='text-2xl font-bold text-left'>Tell us a bit about you</h1>
             <div className="col-span-1 md:col-span-2">
               <LogoUpload />
             </div>

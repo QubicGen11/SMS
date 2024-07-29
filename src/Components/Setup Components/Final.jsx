@@ -17,7 +17,12 @@ const Final = () => {
        
           <div className="text-center text-2xl font-bold mb-4">Almost Done!</div>
           <div className="text-center text-lg mb-4">You have successfully registered your school with us.</div>
+          <div className='flex justify-center'>
           <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720525171/Registration_Successful_hmvcir.gif" alt="Success" className="w-48 h-40 mb-4" />
+
+          </div>
+          <div className="text-center text-2xl font-bold mb-4"><p className='text-sm font-medium'>Note : Use Organization email Id and password to Login</p></div>
+          <div className="text-center text-lg mb-4"><p className='text-sm font-medium'>Click on Finish button below to redirect to Login Page</p></div>
           <div className="flex justify-between w-full px-6">
             <Link to="/ordersummmary" className="bg-[#00274D] text-white px-4 py-2 rounded-md">Previous</Link>
             <Link to="/" className="bg-yellow-500 text-white px-4 py-2 rounded-md">Finish</Link>
