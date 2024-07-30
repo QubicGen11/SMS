@@ -11,6 +11,11 @@ import Enrolements from "./Components/Enrolements_Components/Enrolements";
 import StudentEnrollment from "./Components/Enrolements_Components/StudentEnrollment";
 import TeacherEnrollment from "./Components/Teacher_Enroll_Components/TeacherEnrollment";
 import SetupConfirmation from "./Components/Setup Components/SetupConfirmation";
+import Accessmanagement from "./Components/Access Management/Accessmanagement";
+import Manageroles from "./Components/Access Management/Manageroles";
+import Roles from "./Components/Access Management/Roles";
+import Editaction from "./Components/Access Management/Editaction";
+import NewRoles from "./Components/Access Management/NewRoles";
 
 
 export default function App() {
@@ -27,6 +32,13 @@ export default function App() {
         <Route path="/enrolements" element={<Enrolements />} />
         <Route path="/studentenrollment" element={<StudentEnrollment />} />
         <Route path="/teacherenrollment" element={<TeacherEnrollment />} />
+        <Route path="/user-management" element={<Accessmanagement />} />
+        <Route path="/manageroles" element={<Manageroles/>} />
+        <Route path="/roles" element={<Roles/>} />
+        <Route path="/editactions" element={<Editaction/>} />
+        <Route path="/newroles" element={<NewRoles/>} />
+        
+        
 
       </Routes>
     </BrowserRouter>
