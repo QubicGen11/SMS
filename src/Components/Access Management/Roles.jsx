@@ -76,7 +76,7 @@ const Roles = () => {
             <h1 className="font-bold text-3xl">Roles Management</h1>
           </div>
           <div className="flex justify-between my-4">
-            <Link to="/assignroles" className="bg-blue-600 text-white px-4 py-2 rounded-md">Assign roles</Link>
+            <Link to="/Manageroles" className="bg-blue-600 text-white px-4 py-2 rounded-md">Assign roles</Link>
             <Link to="/newroles" className="bg-blue-600 text-white ml-3 px-4 py-2 rounded-md">Create New Role</Link>
           </div>
           <div className="bg-white shadow rounded-lg p-4 overflow-x-auto">

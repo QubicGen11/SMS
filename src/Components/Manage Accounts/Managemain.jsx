@@ -139,7 +139,7 @@ const Managemain = () => {
           <div className="flex justify-between my-4 ">
             <div className='flex justify-center items-center'>
               <div className="relative group ">
-                <Link to="" className="text-[#00274D] hover:bg-gray-200 px-4 py-2 rounded-md">Users</Link>
+                <Link to="" className="text-[#00274D] bg-gray-200 px-4 py-2 rounded-md">Users</Link>
                 <div className="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 mt-1">
                   Manage user roles
                 </div>
