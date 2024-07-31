@@ -4,7 +4,7 @@ import Header from '../Header_Components/Header';
 import { gsap } from 'gsap';
 import { useNavigate } from 'react-router-dom';
 
-const Editaction = () => {
+const Addgroup = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [roles, setRoles] = useState([]);
   const [selectedRoles, setSelectedRoles] = useState([]);
@@ -91,64 +91,57 @@ const Editaction = () => {
             <h2 className="text-xl font-semibold mb-4">User & Roles</h2>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Username *</label>
-                <p className="text-gray-900">admin</p>
+                <label className="block text-sm font-medium text-gray-700">Domain name *</label>
+                <input type="text" className="mt-1 p-2 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md" defaultValue="tp1" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">First Name</label>
-                <p className="text-gray-900">admin</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                <p className="text-gray-900">admin</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email address</label>
-                <p className="text-gray-900">dlichatlitiadmins@tetrapak.com</p>
-              </div>
-              <label className="block text-sm font-medium text-gray-700">Roles</label>
-              <div onClick={handleRoleLabelClick} className="flex items-center flex-wrap gap-2 p-2 w-96" style={{ border: 'solid 1px black', cursor: 'pointer' }}>
-                {selectedRoles.length === 0 ? (
-                  <span className="text-gray-500">Select roles</span>
-                ) : (
-                  selectedRoles.map((role, index) => (
-                    <div key={index} className="flex items-center">
-                      <span className="inline-flex items-center rounded-full text-xs font-medium bg-blue-100 text-blue-800 p-2">
-                        {role}
-                        <button className="ml-1 text-red-500" onClick={(e) => { e.stopPropagation(); handleRemoveRole(role); }}>x</button>
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
-              {showRolesDropdown && (
-                <div className="mt-2 flex flex-col gap-2 p-2 w-96 border border-black rounded-md">
-                  {roles.map((role, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id={`role-${index}`}
-                        className="mr-2"
-                        checked={selectedRoles.includes(role.name)}
-                        onChange={() => handleRoleCheckboxChange(role.name)}
-                      />
-                      <label htmlFor={`role-${index}`} className="inline-flex items-center text-sm">
-                        {role.name}
-                      </label>
-                    </div>
-                  ))}
+              <div className='flex items-end w-[30vw]'>
+                <div className='flex-grow'>
+                  <label className="block text-sm font-medium text-gray-700">Search for a group *</label>
+                  <input type="search" placeholder='Search for a user' className='mt-1 p-2 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md' />
                 </div>
-              )}
-              <button className="ml-2 bg-gray-200 text-sm p-2 rounded w-64" onClick={handleNewRole}>+ New role</button>
+                <button className="ml-2 bg-blue-500 text-white  p-2 w-36 text-xs rounded self-end" onClick={() => {/* Manage accounts functionality */}}>Manage Accounts</button>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Roles</label>
+                <div onClick={handleRoleLabelClick} className="flex items-center flex-wrap gap-2 p-2 w-full border border-gray-300 rounded-md cursor-pointer">
+                  {selectedRoles.length === 0 ? (
+                    <span className="text-gray-500">Select roles</span>
+                  ) : (
+                    selectedRoles.map((role, index) => (
+                      <div key={index} className="flex items-center">
+                        <span className="inline-flex items-center rounded-full text-xs font-medium bg-blue-100 text-blue-800 p-2">
+                          {role}
+                          <button className="ml-1 text-red-500" onClick={(e) => { e.stopPropagation(); handleRemoveRole(role); }}>x</button>
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+                {showRolesDropdown && (
+                  <div className="mt-2 flex flex-col gap-2 p-2 w-full border border-gray-300 rounded-md">
+                    {roles.map((role, index) => (
+                      <div key={index} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`role-${index}`}
+                          className="mr-2"
+                          checked={selectedRoles.includes(role.name)}
+                          onChange={() => handleRoleCheckboxChange(role.name)}
+                        />
+                        <label htmlFor={`role-${index}`} className="inline-flex items-center text-sm">
+                          {role.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <button className="mt-2 bg-gray-200 text-sm p-2 rounded" onClick={handleNewRole}>+ New role</button>
+              </div>
             </div>
             <hr />
             <div className="flex p-2">
-              <button className="text-white p-2 rounded-full bg-[#00274D]" style={{ border: 'solid 1px black' }}>
-                <a href="/manageroles">  Cancel</a> 
-              </button>
-              <button className="text-white p-2 ml-4 rounded-full bg-[#00274D]" style={{ border: 'solid 1px black' }}>
-                <a href="/manageroles">  Update</a> 
-              </button>
+              <button className="text-white p-2 rounded-full bg-[#00274D] border border-black" onClick={() => navigate('/manageroles')}>Cancel</button>
+              <button className="text-white p-2 ml-4 rounded-full bg-[#00274D] border border-black" onClick={() => {/* Update functionality */}}>Update</button>
             </div>
           </div>
         </main>
@@ -157,4 +150,4 @@ const Editaction = () => {
   );
 };
 
-export default Editaction;
+export default Addgroup;

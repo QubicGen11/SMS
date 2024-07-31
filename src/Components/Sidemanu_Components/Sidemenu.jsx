@@ -29,15 +29,19 @@ const Sidemenu = ({ sidebarOpen, toggleSidebar }) => {
           { path: "/metrics", icon: <FaChartBar size={24} />, label: "Metrics" },
           { path: "/enrolements", icon: <FaWpforms size={24} />, label: "Enrollment/Registration" },
           { path: "/finances", icon: <FaMoneyBill size={24} />, label: "Finances" },
-          { path: "/", icon: <FaUser size={24} />, label: "User Management" },
+    
           { path: "/user-management", icon: <FaUser size={24} />, label: "Access Management" },
-          { path: "/students", icon: <FaUserGraduate size={24} />, label: "Students" },
-          { path: "/teachers", icon: <FaChalkboardTeacher size={24} />, label: "Teachers" },
+          { path: "/", icon: <FaUser size={24} />, label: "Academic Calendar" },
+          { path: "/students", icon: <FaUserGraduate size={24} />, label: "Time Table" },
+          { path: "/teachers", icon: <FaChalkboardTeacher size={24} />, label: "Profiles" },
           { path: "/attendance", icon: <FaClipboardCheck size={24} />, label: "Attendance" },
           { path: "/marks", icon: <FaFileAlt size={24} />, label: "Marks" },
-          { path: "/staff", icon: <FaUsers size={24} />, label: "Staff" },
+          { path: "/staff", icon: <FaUsers size={24} />, label: "Assignments" },
           { path: "/leaves", icon: <FaCalendarAlt size={24} />, label: "Leaves" },
           { path: "/announcements", icon: <FaBullhorn size={24} />, label: "Announcements" },
+          { path: "/announcements", icon: <FaBullhorn size={24} />, label: "Library" },
+          { path: "/announcements", icon: <FaBullhorn size={24} />, label: "Reports" },
+          { path: "/announcements", icon: <FaBullhorn size={24} />, label: "Approvals" },
           { path: "/settings", icon: <FaCog size={24} />, label: "Settings" }
         ].map((item) => (
           <Link to={item.path} className={`flex items-center p-2 rounded-md ${isActive(item.path) ? 'bg-white text-[#00274D]' : 'text-white hover:bg-blue-500'}`}>

@@ -81,7 +81,7 @@ const Accessmanagement = () => {
                             <span className="mt-2 text-sm md:text-lg lg:text-lg xl:text-lg font-semibold">Manage roles</span>
                         </Link>
                         <Link
-                            to="/teacherenrollment"
+                            to="/managemain"
                             className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 xl:w-5/12 rounded-3xl shadow-md hover:shadow-xl"
                             
                         >

@@ -16,6 +16,10 @@ import Manageroles from "./Components/Access Management/Manageroles";
 import Roles from "./Components/Access Management/Roles";
 import Editaction from "./Components/Access Management/Editaction";
 import NewRoles from "./Components/Access Management/NewRoles";
+import Assignrolesuser from "./Components/Access Management/Assignrolesuser";
+import Addgroup from "./Components/Access Management/Addgroup";
+import Managemain from "./Components/Manage Accounts/Managemain";
+import ManageGroups from "./Components/Manage Accounts/ManageGroups";
 
 
 export default function App() {
@@ -37,6 +41,11 @@ export default function App() {
         <Route path="/roles" element={<Roles/>} />
         <Route path="/editactions" element={<Editaction/>} />
         <Route path="/newroles" element={<NewRoles/>} />
+        <Route path="/adduser" element={<Assignrolesuser/>} />
+        <Route path="/addgroup" element={<Addgroup/>} />
+        <Route path="/managemain" element={<Managemain/>} />
+        <Route path="/managegroups" element={<ManageGroups/>} />
+       
         
         
 
