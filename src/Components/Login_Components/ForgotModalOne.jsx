@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Modal from './Modal'; // Adjust the path if necessary
 
 const ForgotPasswordModal = ({ showModal, setShowModal }) => {
@@ -17,8 +18,20 @@ const ForgotPasswordModal = ({ showModal, setShowModal }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleNext = () => {
-    setStep(step + 1);
+  const handleNext = async () => {
+    if (step === 1) {
+      // Send POST request with emailOrMobile
+      try {
+        const response = await axios.post('http://localhost:3000/sms/sendEmail', { email: formData.emailOrMobile });
+        console.log(response.data); // Handle response data if needed
+        setStep(step + 1);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        alert('Failed to send email. Please try again.');
+      }
+    } else {
+      setStep(step + 1);
+    }
   };
 
   const handlePrevious = () => {
@@ -43,7 +56,7 @@ const ForgotPasswordModal = ({ showModal, setShowModal }) => {
             value={formData.emailOrMobile}
             onChange={handleInputChange}
             className="w-full h-7 p-1 mb-4 border rounded-md text-sm"
-            placeholder='Enter Email or Mobile'
+            placeholder="Enter Email or Mobile"
             required
           />
           <div className="flex justify-between w-full">
@@ -59,11 +72,27 @@ const ForgotPasswordModal = ({ showModal, setShowModal }) => {
           <p className="mb-4 text-xs">To verify your identity, we have sent a security code to your mobile number/email.</p>
           <input
             type="text"
-            name="verificationCode"
+            name="resetcode"
             value={formData.verificationCode}
             onChange={handleInputChange}
             className="w-full h-7 p-1 mb-4 border rounded-md text-sm"
-            placeholder='Enter Security Code'
+            placeholder="Enter Security Code"
+          />
+          <input
+            type="text"
+            name="email"
+            value={formData.verificationCode}
+            onChange={handleInputChange}
+            className="w-full h-7 p-1 mb-4 border rounded-md text-sm"
+            placeholder="Enter EmailId"
+          />
+          <input
+            type="text"
+            name="newPassword"
+            value={formData.verificationCode}
+            onChange={handleInputChange}
+            className="w-full h-7 p-1 mb-4 border rounded-md text-sm"
+            placeholder="Enter Security Code"
           />
           <div className="flex justify-between w-full">
             <button onClick={handlePrevious} className="text-red-500 text-xs">Previous</button>
@@ -76,7 +105,7 @@ const ForgotPasswordModal = ({ showModal, setShowModal }) => {
           <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720546891/padlock_3_j1puvk.png" alt="Lock" className="h-10 mb-4" />
           <h2 className="text-sm font-bold mb-2">Setup new password</h2>
           <input
-            type={passwordVisible ? "text" : "password"}
+            type={passwordVisible ? 'text' : 'password'}
             name="newPassword"
             value={formData.newPassword}
             onChange={handleInputChange}
@@ -84,7 +113,7 @@ const ForgotPasswordModal = ({ showModal, setShowModal }) => {
             placeholder="Enter new password"
           />
           <input
-            type={passwordVisible ? "text" : "password"}
+            type={passwordVisible ? 'text' : 'password'}
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleInputChange}

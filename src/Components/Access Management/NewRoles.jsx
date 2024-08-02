@@ -3,6 +3,7 @@ import Sidemenu from '../Sidemanu_Components/Sidemenu';
 import Header from '../Header_Components/Header';
 import { gsap } from 'gsap';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const NewRoles = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -10,6 +11,7 @@ const NewRoles = () => {
   const [roleName, setRoleName] = useState("");
   const [originalRoleName, setOriginalRoleName] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
+  const [features, setFeatures] = useState([]);
   const headerRef = useRef(null);
   const greetingRef = useRef(null);
   const gridRef = useRef(null);
@@ -34,7 +36,7 @@ const NewRoles = () => {
     });
   };
 
-  const handleSaveRole = () => {
+  const handleSaveRole = async () => {
     if (!roleName) {
       alert('Role Name is required.');
       return;
@@ -46,6 +48,27 @@ const NewRoles = () => {
       permissions: permissions
     };
 
+    const formattedFeatures = features.map((feature) => ({
+      featureId: feature.id,
+      createAccess: permissions[feature.featureName]?.Create || false,
+      editAccess: permissions[feature.featureName]?.Edit || false,
+      viewAccess: permissions[feature.featureName]?.View || false,
+      deleteAccess: permissions[feature.featureName]?.Delete || false,
+    }));
+
+    try {
+      const response = await axios.post('http://localhost:3000/sms/newRole', {
+        roleName: roleName,
+        features: formattedFeatures
+      });
+      console.log("Role saved:", response.data);
+      alert('Form submitted successfully!');
+    } catch (error) {
+      console.error('Error saving role:', error);
+      alert('Failed to submit the form.');
+      return;
+    }
+
     if (isEditMode) {
       const updatedRoles = rolesData.map(role =>
         role.name === originalRoleName ? newRole : role
@@ -56,12 +79,34 @@ const NewRoles = () => {
       localStorage.setItem('rolesData', JSON.stringify(rolesData));
     }
 
-    console.log("Role saved:", newRole);
-    alert('Form submitted successfully!');
     navigate(location.state?.from || '/roles'); // Redirect to previous page or Roles page
   };
 
   useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/sms/allfeatures');
+        const featuresData = response.data;
+        setFeatures(featuresData);
+
+        const initialPermissions = featuresData.reduce((acc, feature) => {
+          acc[feature.featureName] = {
+            View: feature.viewAccess,
+            Create: feature.createAccess,
+            Edit: feature.editAccess,
+            Delete: feature.deleteAccess
+          };
+          return acc;
+        }, {});
+
+        setPermissions(initialPermissions);
+      } catch (error) {
+        console.error('Error fetching features:', error);
+      }
+    };
+
+    fetchFeatures();
+
     const editRole = JSON.parse(localStorage.getItem('editRole'));
     if (editRole) {
       setRoleName(editRole.name);
@@ -97,19 +142,6 @@ const NewRoles = () => {
       ease: 'power3.out'
     }, '-=0.3');
   }, []);
-
-  const features = [
-    'Timetable', 'Attendance', 'View Marks', 'Assignments', 'Announcements',
-    'Student Profiles', 'Teacher Profiles', 'Library', 'Online Exams', 'Exam Schedule',
-    'Academic Calendar', 'Payments', 'Teacher Salaries', 'Financial Reports',
-    'School Analytics', 'Events Calendar', 'Enter Marks', 'Capture Attendance',
-    'Edit Student Academic Profile', 'Create Announcements', 'Edit Timetable',
-    'Create Assignments', 'Edit Attendance Records', 'Create Online Exams',
-    'Edit Exam Schedule', 'Edit Academic Calendar', 'Manage Library Inventory',
-    'Process Payments', 'Generate Financial Reports', 'Edit Teacher Salaries',
-    'Generate School Analytics Reports', 'Create Events', 'Edit Announcements',
-    'Manage User Roles', 'Access Student Attendance History', 'Manage Teacher Assignments'
-  ];
 
   const permissionTypes = ['View', 'Create', 'Edit', 'Delete'];
 
@@ -149,14 +181,14 @@ const NewRoles = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {features.map((feature) => (
-                  <tr key={feature}>
-                    <td className="px-6 py-4 whitespace-nowrap">{feature}</td>
+                  <tr key={feature.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">{feature.featureName}</td>
                     {permissionTypes.map((type) => (
                       <td key={type} className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
-                          checked={permissions[feature]?.[type] || false}
-                          onChange={() => handleCheckboxChange(feature, type)}
+                          checked={permissions[feature.featureName]?.[type] || false}
+                          onChange={() => handleCheckboxChange(feature.featureName, type)}
                         />
                       </td>
                     ))}

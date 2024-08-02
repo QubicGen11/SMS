@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
+import axios from 'axios';
 import ForgotPasswordModal from './ForgotModalOne';
 import './Login.css';
+import Cookies from 'js-cookie';
 
 const Login_main = () => {
   const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const logoRef = useRef(null);
   const titleRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // GSAP animations for initial load
@@ -77,6 +82,27 @@ const Login_main = () => {
     };
   }, []);
 
+  const handleLogin = async () => {
+    try {
+      const data = { email, password };
+      const response = await axios.post('http://localhost:3000/sms/login', data);
+      
+      // Store the token and role in cookies
+      const { token, role } = response.data;
+      Cookies.set('authToken', token, { expires: 1 }); // Cookie will expire in 1 day
+      Cookies.set('userRole', role, { expires: 1 }); // Store user role in a cookie
+      
+      alert(response.data.message); // Display success message
+      navigate('/dashboard');
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data); // Display error message from server
+      } else {
+        alert('Login failed. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="Careersmain flex justify-center items-center min-h-screen">
       <div className="absolute inset-0 bg-black bg-opacity-30"></div>
@@ -88,11 +114,11 @@ const Login_main = () => {
           <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720427797/Group_8_1_fjriu5.png" className="h-24 logo" alt="QubicGen Logo" ref={logoRef} />
           <div className="relative w-full md:w-64 flex justify-center">
             <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720430246/user_blfrle.png" alt="User Icon" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-6" />
-            <input type="text" className="w-full pl-10 rounded-2xl text-lg p-2 h-12" placeholder="user id" />
+            <input type="text" className="w-full pl-10 rounded-2xl text-lg p-2 h-12" placeholder="user id" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="relative w-full md:w-64 flex justify-center">
             <img src="https://res.cloudinary.com/devewerw3/image/upload/v1720430245/padlock_lvmzv2.png" alt="Padlock Icon" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-6" />
-            <input type="password" className="w-full pl-10 rounded-2xl text-lg p-2 h-12" placeholder="password" />
+            <input type="password" className="w-full pl-10 rounded-2xl text-lg p-2 h-12" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
 
           <div className="flex flex-col md:flex-row gap-2 md:gap-6">
@@ -100,9 +126,7 @@ const Login_main = () => {
             <a href="#" className="text-sm text-white" onClick={() => setShowModal(true)}>Forgot Password ?</a>
           </div>
 
-          <Link to="/dashboard">
-            <button className="bg-blue-500 hover:bg-yellow-600 text-white text-base font-bold px-16 py-2 rounded-2xl">LOG IN</button>
-          </Link>
+          <button onClick={handleLogin} className="bg-blue-500 hover:bg-yellow-600 text-white text-base font-bold px-16 py-2 rounded-2xl">LOG IN</button>
 
           <ForgotPasswordModal showModal={showModal} setShowModal={setShowModal} />
         </div>
