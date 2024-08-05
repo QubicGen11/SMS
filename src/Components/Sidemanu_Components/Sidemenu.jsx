@@ -29,7 +29,6 @@ const Sidemenu = ({ sidebarOpen, toggleSidebar }) => {
           { path: "/metrics", icon: <FaChartBar size={24} />, label: "Metrics" },
           { path: "/enrolements", icon: <FaWpforms size={24} />, label: "Enrollment/Registration" },
           { path: "/finances", icon: <FaMoneyBill size={24} />, label: "Finances" },
-    
           { path: "/user-management", icon: <FaUser size={24} />, label: "Access Management" },
           { path: "/", icon: <FaUser size={24} />, label: "Academic Calendar" },
           { path: "/students", icon: <FaUserGraduate size={24} />, label: "Time Table" },
