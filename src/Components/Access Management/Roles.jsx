@@ -4,6 +4,7 @@ import Header from '../Header_Components/Header';
 import { gsap } from 'gsap';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdModeEdit, MdDelete } from "react-icons/md";
+import axios from 'axios'; // Make sure axios is installed
 
 const Roles = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,15 +24,25 @@ const Roles = () => {
     navigate('/newroles', { state: { from: '/roles' } }); // Redirect to NewRole page for editing
   };
 
-  const handleDeleteRole = (roleName) => {
-    const updatedRoles = roles.filter(role => role.name !== roleName);
+  const handleDeleteRole = (roleId) => {
+    const updatedRoles = roles.filter(role => role.id !== roleId);
     setRoles(updatedRoles);
     localStorage.setItem('rolesData', JSON.stringify(updatedRoles));
   };
 
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/sms/allroles');
+      const fetchedRoles = response.data;
+      setRoles(fetchedRoles);
+      localStorage.setItem('rolesData', JSON.stringify(fetchedRoles));
+    } catch (error) {
+      console.error('Failed to fetch roles:', error);
+    }
+  };
+
   useEffect(() => {
-    const savedRoles = JSON.parse(localStorage.getItem('rolesData')) || [];
-    setRoles(savedRoles);
+    fetchRoles();
 
     const tl = gsap.timeline();
 
@@ -88,12 +99,12 @@ const Roles = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {roles.map((role, index) => (
-                  <tr key={index}>
+                {roles.map((role) => (
+                  <tr key={role.id}>
                     <td className="px-6 py-4 whitespace-nowrap">{role.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap flex items-center">
                       <MdModeEdit className="mr-2 cursor-pointer" onClick={() => handleEditRole(role)} />
-                      <MdDelete className="cursor-pointer" onClick={() => handleDeleteRole(role.name)} />
+                      <MdDelete className="cursor-pointer" onClick={() => handleDeleteRole(role.id)} />
                     </td>
                   </tr>
                 ))}
