@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import Sidemenu from '../Sidemanu_Components/Sidemenu';
 import Header from '../Header_Components/Header';
 import { gsap } from 'gsap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 
 const NewRoles = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -42,22 +42,16 @@ const NewRoles = () => {
       return;
     }
 
-    const rolesData = JSON.parse(localStorage.getItem('rolesData')) || [];
-    const newRole = {
-      name: roleName,
-      permissions: permissions
-    };
-
     const formattedFeatures = features.map((feature) => ({
-      featureId: feature.id,
-      createAccess: permissions[feature.featureName]?.Create || false,
-      editAccess: permissions[feature.featureName]?.Edit || false,
-      viewAccess: permissions[feature.featureName]?.View || false,
-      deleteAccess: permissions[feature.featureName]?.Delete || false,
+      id: feature.id,
+      createAccess: permissions[feature.name]?.Create || false,
+      editAccess: permissions[feature.name]?.Edit || false,
+      viewAccess: permissions[feature.name]?.View || true,
+      deleteAccess: permissions[feature.name]?.Delete || false,
     }));
 
     try {
-      const response = await axios.post('http://localhost:3000/sms/newRole', {
+      const response = await axios.post('http://localhost:3000/sms/newrole', {
         roleName: roleName,
         features: formattedFeatures
       });
@@ -70,12 +64,21 @@ const NewRoles = () => {
     }
 
     if (isEditMode) {
+      const rolesData = JSON.parse(localStorage.getItem('rolesData')) || [];
+      const newRole = {
+        name: roleName,
+        permissions: permissions
+      };
       const updatedRoles = rolesData.map(role =>
         role.name === originalRoleName ? newRole : role
       );
       localStorage.setItem('rolesData', JSON.stringify(updatedRoles));
     } else {
-      rolesData.push(newRole);
+      const rolesData = JSON.parse(localStorage.getItem('rolesData')) || [];
+      rolesData.push({
+        name: roleName,
+        permissions: permissions
+      });
       localStorage.setItem('rolesData', JSON.stringify(rolesData));
     }
 
@@ -87,10 +90,11 @@ const NewRoles = () => {
       try {
         const response = await axios.get('http://localhost:3000/sms/allfeatures');
         const featuresData = response.data;
+
         setFeatures(featuresData);
 
         const initialPermissions = featuresData.reduce((acc, feature) => {
-          acc[feature.featureName] = {
+          acc[feature.name] = {
             View: feature.viewAccess,
             Create: feature.createAccess,
             Edit: feature.editAccess,
@@ -182,13 +186,13 @@ const NewRoles = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {features.map((feature) => (
                   <tr key={feature.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{feature.featureName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{feature.name}</td>
                     {permissionTypes.map((type) => (
                       <td key={type} className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
-                          checked={permissions[feature.featureName]?.[type] || false}
-                          onChange={() => handleCheckboxChange(feature.featureName, type)}
+                          checked={permissions[feature.name]?.[type] || false}
+                          onChange={() => handleCheckboxChange(feature.name, type)}
                         />
                       </td>
                     ))}

@@ -87,10 +87,11 @@ const Login_main = () => {
       const data = { email, password };
       const response = await axios.post('http://localhost:3000/sms/login', data);
       
-      // Store the token and role in cookies
-      const { token, role } = response.data;
+      const { token, role,id } = response.data;
       Cookies.set('authToken', token, { expires: 1 }); // Cookie will expire in 1 day
       Cookies.set('userRole', role, { expires: 1 }); // Store user role in a cookie
+      Cookies.set('userId', id, { expires: 1 }); // Store user role in a cookie
+      
       
       alert(response.data.message); // Display success message
       navigate('/dashboard');

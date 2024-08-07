@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import Sidemenu from '../Sidemanu_Components/Sidemenu';
 import Header from '../Header_Components/Header';
 import { gsap } from 'gsap';
@@ -6,7 +7,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaSearch, FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 import { AiOutlineUser, AiOutlineGroup } from 'react-icons/ai';
-import { FiExternalLink } from 'react-icons/fi';
 
 const ManageGroups = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,17 +14,22 @@ const ManageGroups = () => {
   const [assignRolesDropdownOpen, setAssignRolesDropdownOpen] = useState(false);
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [groupSearchTerm, setGroupSearchTerm] = useState(""); // Separate state for group search
+  const [userSearchTerm, setUserSearchTerm] = useState(""); // Separate state for user search
   const [tableData, setTableData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [offCanvasOpen, setOffCanvasOpen] = useState(false); // Added state for off-canvas sidebar
   const [currentGroupName, setCurrentGroupName] = useState(''); // Added state for current group name
+  const [userSuggestions, setUserSuggestions] = useState([]); // Added state for user suggestions
+  const [selectedUsers, setSelectedUsers] = useState([]); // Added state for selected users
+  const [userIds, setUserIds] = useState([]); // Added state for user IDs
   const modalRef = useRef(null);
   const headerRef = useRef(null);
   const greetingRef = useRef(null);
   const gridRef = useRef(null);
   const dbMainRef = useRef(null);
   const navigate = useNavigate();
+  const debounceTimeoutRef = useRef(null); // Ref for debounce timeout
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -82,15 +87,46 @@ const ManageGroups = () => {
       stagger: 0.2
     }, '-=0.3');
 
-    // Set initial table data
-    const initialData = [
-      { name: "Admin Admin", username: "admin", email: "admin@example.com", designation: "Manager", roles: "Administrator", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" },
-      { name: "User User", username: "user", email: "user@example.com", designation: "Developer", roles: "User", roleAssignment: "Direct assignment", branchesList: "Enabled", status: "Enabled" },
-      { name: "Guest Guest", username: "guest", email: "guest@example.com", designation: "Visitor", roles: "Guest", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" }
-    ];
-    setTableData(initialData);
-    setOriginalData(initialData);
+    // Fetch groups from API
+    const fetchGroups = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/sms/allgroups');
+        const data = await response.json();
+        const formattedData = data.map(group => ({
+          name: group.groupName,
+          id: group.id,
+          groupType: group.groupType
+        }));
+        setTableData(formattedData);
+        setOriginalData(formattedData);
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    };
+
+    fetchGroups();
   }, []);
+
+  useEffect(() => {
+    // Fetch user names from API
+    const fetchUserNames = async (searchTerm = '') => {
+      try {
+        const response = await axios.get('http://localhost:3000/sms/allusers', {
+          params: { search: searchTerm }
+        });
+        const data = response.data;
+        setUserSuggestions(data.map(user => ({ id: user.id, name: user.name })));
+      } catch (error) {
+        console.error('Error fetching user names:', error);
+      }
+    };
+
+    if (userSearchTerm) {
+      fetchUserNames(userSearchTerm);
+    } else {
+      setUserSuggestions([]);
+    }
+  }, [userSearchTerm]);
 
   const handleActionClick = (index, action) => {
     if (action === 'edit') {
@@ -121,15 +157,49 @@ const ManageGroups = () => {
     setTableData(originalData);
   };
 
-  const handleSearch = (event) => {
+  const handleGroupSearch = (event) => {
     const value = event.target.value.toLowerCase();
-    setSearchTerm(value);
+    setGroupSearchTerm(value);
 
     const filteredData = originalData.filter(item => 
-      item.name.toLowerCase().includes(value) || 
-      item.email.toLowerCase().includes(value)
+      item.name.toLowerCase().includes(value)
     );
     setTableData(filteredData);
+  };
+
+  const handleUserSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setUserSearchTerm(value);
+
+    // Implement debounce to reduce API calls
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      setUserSearchTerm(value);
+    }, 300); // Adjust the delay as needed
+  };
+  
+  const handleUserSelect = (user) => {
+    if (!selectedUsers.some(selectedUser => selectedUser.id === user.id)) {
+      setSelectedUsers(prevSelectedUsers => [...prevSelectedUsers, user]);
+      setUserIds(prevUserIds => [...prevUserIds, user.id]);
+    }
+    setUserSearchTerm(''); // Clear the input field but keep the focus
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.post('http://localhost:3000/sms/assigngroup', {
+        userIds: userIds,
+        groupName: currentGroupName
+      });
+      setOffCanvasOpen(false);
+      console.log('Group successfully assigned.');
+    } catch (error) {
+      console.error('Error assigning group:', error);
+    }
   };
 
   return (
@@ -142,7 +212,7 @@ const ManageGroups = () => {
         <div ref={headerRef} className="sticky top-0 bg-white z-10">
           <Header sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         </div>
-        <h2 className="font-bold text-3xl mt-7">Users</h2>
+        <h2 className="font-bold text-3xl mt-7">Groups</h2>
         <div className="flex flex-col px-4">
           <div className="flex justify-between my-4">
             <div className='flex justify-center items-center'>
@@ -176,108 +246,124 @@ const ManageGroups = () => {
                     <Link to="/addgroup" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
                       <AiOutlineGroup className="mr-2" /> Group
                     </Link>
-                    <Link to="/addrobot" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      <AiOutlineUser className="mr-2" /> Robot account
-                    </Link>
-                    <Link to="/addexternalapp" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      <FiExternalLink className="mr-2" /> External app
-                    </Link>
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-5 my-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search by Name or Email"
-                className="pl-10 pr-4 py-2 border rounded-md"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-500" />
-            </div>
-            <div className="relative">
-              <button onClick={handleFilterDropdownToggle} className="bg-gray-300 text-black px-4 py-2 rounded-md">Filters</button>
+              <button onClick={handleFilterDropdownToggle} className="bg-gray-300 text-black px-4 py-2 rounded-md">Filter</button>
               {filterDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                  {["Name", "Username", "Email", "Designation", "Roles", "RoleAssignment", "BranchesList", "Status"].map((filterOption, index) => (
-                    <button key={index} onClick={() => handleFilterChange(filterOption)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      {filterOption}
-                    </button>
-                  ))}
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
+                  <button onClick={() => handleFilterChange('User')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">User</button>
+                  <button onClick={() => handleFilterChange('Group')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Group</button>
+                  <button onClick={handleResetFilter} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Reset</button>
                 </div>
               )}
             </div>
-            <button onClick={handleResetFilter} className="bg-gray-300 text-black px-4 py-2 rounded-md">Reset to Default</button>
+          </div>
+          <div ref={greetingRef} className="flex flex-col mt-2">
+            <div className="relative mt-2">
+              <input
+                type="text"
+                placeholder="Search Groups"
+                value={groupSearchTerm}
+                onChange={handleGroupSearch}
+                className="pl-10 pr-4 py-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaSearch className="text-gray-400" />
+              </div>
+            </div>
+            <div className="overflow-x-auto mt-4">
+              <table className="min-w-full bg-white rounded-lg shadow overflow-hidden">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 border-b border-gray-200"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{item.name}</td>
+                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{item.groupType}</td>
+                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-right text-sm leading-5 font-medium">
+                        <div className="relative">
+                          <button onClick={() => setDropdownOpen(index)} className="text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <SlOptionsVertical className="w-5 h-5" />
+                          </button>
+                          {dropdownOpen === index && (
+                            <div ref={modalRef} className="absolute right-0 mt-2 w-32 bg-white border rounded-md shadow-lg z-20">
+                              <button onClick={() => handleActionClick(index, 'edit')} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <FaPencilAlt className="mr-2" /> Edit
+                              </button>
+                              <button onClick={() => handleActionClick(index, 'delete')} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <FaTrashAlt className="mr-2" /> Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        {/* Main section */}
-        <main className="flex flex-col flex-1 p-4 overflow-y-auto bg-gray-100">
-          <div>
-            <div ref={gridRef}>
-              <div className="relative bottom-8 shadow rounded-lg p-4 overflow-x-auto h-[70vh]">
-                <table className="min-w-full divide-y divide-gray-200 ">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Name" ? "hidden" : ""}`}>Group Name</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter ? "hidden" : ""}`}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y">
-                    {tableData.map((row, index) => (
-                      <tr key={index} className=''>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Name" ? "hidden" : ""}`}>{row.name}</td>
-                        <td className={`relative px-6 py-4 whitespace-nowrap w-96 flex cursor-pointer ${filter ? "hidden" : ""}`}>
-                          <FaPencilAlt
-                            className="text-blue-600 mr-4 cursor-pointer"
-                            onClick={() => handleActionClick(index, 'edit')}
-                          />
-                          <FaTrashAlt
-                            className="text-red-600 cursor-pointer"
-                            onClick={() => handleActionClick(index, 'delete')}
-                          />
-                        </td>
-                      </tr>
+        {/* Off-canvas sidebar */}
+        {offCanvasOpen && (
+          <div className="fixed inset-0 flex justify-end z-40">
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50"></div>
+            <div className="relative w-96 bg-white shadow-lg h-full">
+              <div className="px-4 py-3 bg-gray-800 text-white text-lg font-semibold flex justify-between">
+                <h2>Add Group</h2>
+                <button onClick={() => setOffCanvasOpen(false)}>&times;</button>
+              </div>
+              <div className="p-4">
+                <label className="block mb-2">Group Name</label>
+                <input
+                  type="text"
+                  value={currentGroupName}
+                  onChange={(e) => setCurrentGroupName(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                />
+                <div className="relative mt-4">
+                  <label className="block mb-2">Add Users</label>
+                  <input
+                    type="text"
+                    value={userSearchTerm} // Use user search term state
+                    onChange={handleUserSearch}
+                    className="w-full px-3 py-2 border rounded"
+                  />
+                  {userSearchTerm && (
+                    <ul className="absolute z-10 mt-2 w-full bg-white border rounded shadow-lg max-h-48 overflow-auto">
+                      {userSuggestions.map((user, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleUserSelect(user)}
+                          className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        >
+                          {user.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <p className='text-right p-2 text-blue-600 cursor-pointer'>View all users</p>
+                </div>
+                
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Selected Users</h4>
+                  <ul className="list-disc pl-5">
+                    {selectedUsers.map((user, index) => (
+                      <li key={index} className='p-2 '>{user.name}</li>
                     ))}
-                  </tbody>
-                </table>
+                  </ul>
+                </div>
+                <button onClick={handleSave} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Save</button>
               </div>
             </div>
           </div>
-        </main>
-      </div>
-      {/* Off-canvas sidebar */}
-      <div className={`fixed top-0 right-0 w-64 mt-28 h-full bg-white shadow-lg transform ${offCanvasOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300`}>
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-medium">Add Group</h3>
-          <button onClick={() => setOffCanvasOpen(false)} className="text-gray-600">
-            Close
-          </button>
-        </div>
-        <div className="p-4">
-          {/* Form contents go here */}
-          <form>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Group Name <span className='text-red-600'>*</span></label>
-              <input
-                type="text"
-                className="mt-1 p-2 block w-full border rounded-md"
-                value={currentGroupName} // Prefill with current group name
-                onChange={(e) => setCurrentGroupName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Add a User <span className='text-red-600'>*</span></label>
-              <input type="text" className="mt-1 p-2 block w-full border rounded-md" required />
-            </div>
-            <div className="flex justify-end">
-              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md">Update</button>
-            </div>
-          </form>
-        </div>
+        )}
       </div>
     </div>
   );

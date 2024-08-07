@@ -5,7 +5,7 @@ import './SetupConfirmation.css';
 
 const SetupConfirmation = () => {
   const { state } = useLocation();
-  const navigate = useNavigate();  // Correct placement of useNavigate
+  const navigate = useNavigate(); // Correct placement of useNavigate
   const formData = state?.formData || {}; // Access formData passed from Setup
 
   const steps = ['Organization', 'Preview', 'Payment', 'Finish'];
@@ -34,7 +34,7 @@ const SetupConfirmation = () => {
           <div className="mt-8">
             <h2 className="text-2xl text-center mr-56 font-bold mb-4">Confirm Your Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div className="text-sm"><span className="text-base font-bold">Organization Name:</span> {formData.organizationName}</div> {/* Changed field name */}
+              <div className="text-sm"><span className="text-base font-bold">Organization Name:</span> {formData.organisationName}</div> {/* Corrected field name */}
               <div className="text-sm"><span className="text-base font-bold">Registering Person Name:</span> {formData.registerPersonName}</div>
               <div className="text-sm"><span className="text-base font-bold">Founder First Name:</span> {formData.founderFirstName}</div>
               <div className="text-sm"><span className="text-base font-bold">Founder Last Name:</span> {formData.founderLastName}</div>

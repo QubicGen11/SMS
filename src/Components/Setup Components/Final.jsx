@@ -10,7 +10,7 @@ const Final = () => {
   const location = useLocation();
 
   // Retrieve formData from location or local storage
-  const formData = location.state?.formData || JSON.parse(localStorage.getItem('registrationData')) || {};
+  const formData =  JSON.parse(localStorage.getItem('formData')) || {};
 
   // Define required fields for validation
   const requiredFields = [
@@ -20,7 +20,7 @@ const Final = () => {
     'founderLastName', 
     'mobileNumber', 
     'typeOfSchool', 
-    'syllubusType', 
+    'syllabusType', 
     'addressLine1', 
     'addressLine2', 
     'email', 
@@ -41,10 +41,6 @@ const Final = () => {
       }
     });
 
-    if (missingFields.length > 0) {
-      alert(`Missing required fields: ${missingFields.join(', ')}`);
-      return false;
-    }
 
     return true;
   };
@@ -59,13 +55,13 @@ const Final = () => {
       console.log('Form Data:', formData);
   
       // Make the POST request with the form data
-      const response = await axios.post('http://localhost:3000/sms/newOrganisation', formData);
+      const response = await axios.post('http://localhost:3000/sms/neworg', formData);
   
       // Handle response  
       console.log('Response:', response.data);
   
       // Clear local storage after successful POST request
-      localStorage.removeItem('registrationData');
+      localStorage.removeItem('formData');
   
       // Redirect to login page or another page if needed
       window.location.href = '/';
