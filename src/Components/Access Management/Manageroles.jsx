@@ -79,15 +79,19 @@ const Manageroles = () => {
       ease: 'power3.out',
       stagger: 0.2
     }, '-=0.3');
+  }, []);
 
-    // Set initial table data
-    const initialData = [
-      { name: "Admin Admin", username: "admin", email: "admin@example.com", designation: "Manager", roles: "Administrator", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" },
-      { name: "User User", username: "user", email: "user@example.com", designation: "Developer", roles: "User", roleAssignment: "Direct assignment", branchesList: "Enabled", status: "Enabled" },
-      { name: "Guest Guest", username: "guest", email: "guest@example.com", designation: "Visitor", roles: "Guest", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" }
-    ];
-    setTableData(initialData);
-    setOriginalData(initialData);
+  useEffect(() => {
+    // Fetch data from API
+    fetch('http://localhost:3000/sms/allusers')
+      .then(response => response.json())
+      .then(data => {
+        // Set the table data to the first 20 users
+        const first20Users = data.slice(0, 20);
+        setTableData(first20Users);
+        setOriginalData(first20Users);
+      })
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
 
   const handleActionClick = (index) => {
@@ -197,60 +201,46 @@ const Manageroles = () => {
                 </div>
               )}
             </div>
-            <button onClick={handleResetFilter} className="bg-gray-300 text-black px-4 py-2 rounded-md">Reset to Default</button>
+            <button onClick={handleResetFilter} className="bg-gray-300 text-black px-4 py-2 rounded-md">Reset Filters</button>
+          </div>
+          <div ref={gridRef} className="overflow-x-auto">
+            <table className="min-w-full bg-white border">
+              <thead>
+                <tr className="w-full bg-gray-300 text-black border">
+                  <th className="py-2 px-4 border">Name</th>
+                   <th className="py-2 px-4 border">Email</th>
+                  <th className="py-2 px-4 border">Designation</th>
+                  <th className="py-2 px-4 border">Roles</th>
+                   <th className="py-2 px-4 border">Branches Name</th>
+                  <th className="py-2 px-4 border">Status</th>
+                  <th className="py-2 px-4 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((row, index) => (
+                  <tr key={index} className="w-full">
+                    <td className="py-2 px-4 border">{row.name}</td>
+                     <td className="py-2 px-4 border">{row.email}</td>
+                    <td className="py-2 px-4 border">{row.designation}</td>
+                    <td className="py-2 px-4 border">{row.roles}</td>
+                    <td className="py-2 px-4 border">{row.branchesList}</td>
+                    <td className="py-2 px-4 border">{row.status}</td>
+                    <td className="py-2 px-4 border relative">
+                      <button onClick={() => handleActionClick(index)} className="p-2"><SlOptionsVertical /></button>
+                      {dropdownOpen === index && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
+                          <Link to={`/edit/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit</Link>
+                          <Link to={`/delete/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Delete</Link>
+                          <Link to={`/delete/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Disable</Link>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-        {/* Main section */}
-        <main className="flex flex-col flex-1 p-4 overflow-y-auto bg-gray-100">
-          <div>
-            <div ref={gridRef} >
-              <div className="relative bottom-8 shadow rounded-lg p-4 overflow-x-auto h-[70vh]">
-                <table className="min-w-full divide-y divide-gray-200 ">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Name" ? "hidden" : ""}`}>Name</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Username" ? "hidden" : ""}`}>Username</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Email" ? "hidden" : ""}`}>Email</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Designation" ? "hidden" : ""}`}>Designation</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Roles" ? "hidden" : ""}`}>Roles</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "RoleAssignment" ? "hidden" : ""}`}>Role Assignment</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "BranchesList" ? "hidden" : ""}`}>Branches List</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Status" ? "hidden" : ""}`}>Status</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter ? "hidden" : ""}`}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {tableData.map((row, index) => (
-                      <tr key={index}>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Name" ? "hidden" : ""}`}>{row.name}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Username" ? "hidden" : ""}`}>{row.username}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Email" ? "hidden" : ""}`}>{row.email}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Designation" ? "hidden" : ""}`}>{row.designation}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Roles" ? "hidden" : ""}`}>{row.roles}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "RoleAssignment" ? "hidden" : ""}`}>{row.roleAssignment}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "BranchesList" ? "hidden" : ""}`}>{row.branchesList}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Status" ? "hidden" : ""}`}>{row.status}</td>
-                        <td className={`relative px-6 py-4 whitespace-nowrap cursor-pointer ${filter ? "hidden" : ""}`} onClick={() => handleActionClick(index)}>
-                          <SlOptionsVertical />
-                          {dropdownOpen === index && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                              <a href="/editactions" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit</a>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Check roles & permissions clicked')}>Check roles & permissions</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('View profile clicked')}>View profile</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Activate clicked')}>Activate</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Deactivate clicked')}>Deactivate</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Remove clicked')}>Remove</button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </main>
       </div>
     </div>
   );

@@ -40,12 +40,9 @@ const Roles = () => {
       console.error('Failed to fetch roles:', error);
     }
   };
-
   useEffect(() => {
     fetchRoles();
-
     const tl = gsap.timeline();
-
     // Header animation
     tl.from(headerRef.current, {
       opacity: 0,
@@ -62,7 +59,7 @@ const Roles = () => {
       ease: 'power3.out'
     }, '-=0.3');
 
-    // Grid animation
+    // Grid animation 
     tl.from(gridRef.current, {
       y: 50,
       opacity: 0,
@@ -92,10 +89,10 @@ const Roles = () => {
           </div>
           <div className="bg-white shadow rounded-lg p-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-300 font-semibold">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">

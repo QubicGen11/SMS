@@ -7,6 +7,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { FaSearch } from 'react-icons/fa';
 import { AiOutlineUser, AiOutlineGroup } from 'react-icons/ai';
 import { FiExternalLink } from 'react-icons/fi';
+import axios from 'axios';
 
 const Managemain = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,9 +16,22 @@ const Managemain = () => {
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [filter, setFilter] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [groupSearchTerm, setGroupSearchTerm] = useState("");
+  const [groupSuggestions, setGroupSuggestions] = useState([]);
+  const [selectedGroupName, setSelectedGroupName] = useState(""); // State to hold selected group name
   const [tableData, setTableData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [offCanvasOpen, setOffCanvasOpen] = useState(false); // Added state for off-canvas sidebar
+  const [offCanvasOpen, setOffCanvasOpen] = useState(false); 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    groupId: '',
+    groupName: ''
+  });
+
   const modalRef = useRef(null);
   const headerRef = useRef(null);
   const greetingRef = useRef(null);
@@ -48,7 +62,6 @@ const Managemain = () => {
   useEffect(() => {
     const tl = gsap.timeline();
 
-    // Header animation
     tl.from(headerRef.current, {
       opacity: 0,
       y: -50,
@@ -56,7 +69,7 @@ const Managemain = () => {
       stagger: 0.2,
       ease: 'ease-in-out'
     });
-    // Greeting animation
+
     tl.from(greetingRef.current, {
       y: 30,
       opacity: 0,
@@ -64,7 +77,6 @@ const Managemain = () => {
       ease: 'power3.out'
     }, '-=0.3');
 
-    // Grid animation
     tl.from(gridRef.current, {
       y: 50,
       opacity: 0,
@@ -72,7 +84,6 @@ const Managemain = () => {
       ease: 'power3.out'
     }, '-=0.3');
 
-    // Dbmain animation
     tl.from(dbMainRef.current, {
       opacity: 0,
       y: 50,
@@ -81,15 +92,45 @@ const Managemain = () => {
       stagger: 0.2
     }, '-=0.3');
 
-    // Set initial table data
     const initialData = [
       { name: "Admin Admin", username: "admin", email: "admin@example.com", designation: "Manager", roles: "Administrator", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" },
       { name: "User User", username: "user", email: "user@example.com", designation: "Developer", roles: "User", roleAssignment: "Direct assignment", branchesList: "Enabled", status: "Enabled" },
       { name: "Guest Guest", username: "guest", email: "guest@example.com", designation: "Visitor", roles: "Guest", roleAssignment: "Direct assignment", branchesList: "Disabled", status: "Disabled" }
     ];
-    setTableData(initialData);
+
     setOriginalData(initialData);
   }, []);
+  
+  useEffect(() => {
+    fetch('http://localhost:3000/sms/allusers')
+      .then(response => response.json())
+      .then(data => {
+        const first20Users = data.slice(0, 20);
+        setTableData(first20Users);
+        setOriginalData(first20Users);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  useEffect(() => {
+    const fetchGroupSuggestions = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/sms/allgroups', {
+          params: { search: groupSearchTerm }
+        });
+        const data = response.data;
+        setGroupSuggestions(data.map(group => ({ id: group.id, groupName: group.groupName })));
+      } catch (error) {
+        console.error('Error fetching group names:', error);
+      }
+    };
+
+    if (groupSearchTerm) {
+      fetchGroupSuggestions();
+    } else {
+      setGroupSuggestions([]);
+    }
+  }, [groupSearchTerm]);
 
   const handleActionClick = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -124,6 +165,34 @@ const Managemain = () => {
     setTableData(filteredData);
   };
 
+  const handleGroupSearch = (event) => {
+    setGroupSearchTerm(event.target.value);
+  };
+
+  const handleUserSelect = (group) => {
+    setSelectedGroupName(group.groupName); // Set selected group name
+    setFormData({ ...formData, groupId: group.id, groupName: group.groupName }); // Update form data with group info
+    setGroupSearchTerm(''); // Clear the input field
+    setGroupSuggestions([]); // Hide suggestions after selection
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/sms/admininvite', formData);
+      console.log('User invited:', response.data);
+      // Handle success (e.g., show success message, reset form, etc.)
+    } catch (error) {
+      console.error('Error inviting user:', error);
+      // Handle error (e.g., show error message)
+    }
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -152,15 +221,10 @@ const Managemain = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-            <div className="relative">
+              <div className="relative">
                 <a href="/manageroles">
-
-                <button onClick={handleAssignRolesDropdownToggle} className="bg-blue-600 text-white px-4 py-2 rounded-md">Assign roles</button>
-                
-                
-                
+                  <button onClick={handleAssignRolesDropdownToggle} className="bg-blue-600 text-white px-4 py-2 rounded-md">Assign roles</button>
                 </a>
-                
               </div>
               <Link to="/checkroles" className="bg-gray-300 text-black px-4 py-2 rounded-md">Check roles & permissions</Link>
               <div className="relative">
@@ -199,69 +263,63 @@ const Managemain = () => {
               <button onClick={handleFilterDropdownToggle} className="bg-gray-300 text-black px-4 py-2 rounded-md">Filters</button>
               {filterDropdownOpen && (
                 <div className="absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                  {["Name", "Username", "Email", "Designation", "Roles", "RoleAssignment", "BranchesList", "Status"].map((filterOption, index) => (
-                    <button key={index} onClick={() => handleFilterChange(filterOption)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      {filterOption}
-                    </button>
+                  {["All", "Active", "Disabled"].map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleFilterChange(option)}
+                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {option}
+                    </div>
                   ))}
+                  <div
+                    onClick={handleResetFilter}
+                    className="px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Reset Filter
+                  </div>
                 </div>
               )}
             </div>
-            <button onClick={handleResetFilter} className="bg-gray-300 text-black px-4 py-2 rounded-md">Reset to Default</button>
+          </div>
+          <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border">
+              <thead>
+                <tr className="w-full bg-gray-300 text-black border">
+                  <th className="py-2 px-4 border">Name</th>
+                   <th className="py-2 px-4 border">Email</th>
+                  <th className="py-2 px-4 border">Designation</th>
+                  <th className="py-2 px-4 border">Roles</th>
+                   <th className="py-2 px-4 border">Branches Name</th>
+                  <th className="py-2 px-4 border">Status</th>
+                  <th className="py-2 px-4 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((row, index) => (
+                  <tr key={index} className="w-full">
+                    <td className="py-2 px-4 border">{row.name}</td>
+                     <td className="py-2 px-4 border">{row.email}</td>
+                    <td className="py-2 px-4 border">{row.designation}</td>
+                    <td className="py-2 px-4 border">{row.roles}</td>
+                    <td className="py-2 px-4 border">{row.branchesList}</td>
+                    <td className="py-2 px-4 border">{row.status}</td>
+                    <td className="py-2 px-4 border relative">
+                      <button onClick={() => handleActionClick(index)} className="p-2"><SlOptionsVertical /></button>
+                      {dropdownOpen === index && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
+                          <Link to={`/edit/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit</Link>
+                          <Link to={`/delete/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Delete</Link>
+                          <Link to={`/delete/${row.id}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Disable</Link>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-        {/* Main section */}
-        <main className="flex flex-col flex-1 p-4 overflow-y-auto bg-gray-100">
-          <div>
-            <div ref={gridRef} >
-              <div className="relative bottom-8 shadow rounded-lg p-4 overflow-x-auto h-[70vh]">
-                <table className="min-w-full divide-y divide-gray-200 ">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Name" ? "hidden" : ""}`}>Name</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Username" ? "hidden" : ""}`}>Username</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Email" ? "hidden" : ""}`}>Email</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Designation" ? "hidden" : ""}`}>Designation</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Roles" ? "hidden" : ""}`}>Roles</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "RoleAssignment" ? "hidden" : ""}`}>Role Assignment</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "BranchesList" ? "hidden" : ""}`}>Branches List</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter && filter !== "Status" ? "hidden" : ""}`}>Status</th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${filter ? "hidden" : ""}`}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {tableData.map((row, index) => (
-                      <tr key={index}>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Name" ? "hidden" : ""}`}>{row.name}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Username" ? "hidden" : ""}`}>{row.username}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Email" ? "hidden" : ""}`}>{row.email}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Designation" ? "hidden" : ""}`}>{row.designation}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Roles" ? "hidden" : ""}`}>{row.roles}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "RoleAssignment" ? "hidden" : ""}`}>{row.roleAssignment}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "BranchesList" ? "hidden" : ""}`}>{row.branchesList}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap ${filter && filter !== "Status" ? "hidden" : ""}`}>{row.status}</td>
-                        <td className={`relative px-6 py-4 whitespace-nowrap cursor-pointer ${filter ? "hidden" : ""}`} onClick={() => handleActionClick(index)}>
-                          <SlOptionsVertical />
-                          {dropdownOpen === index && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                              <a href="/editactions" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit</a>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Check roles & permissions clicked')}>Check roles & permissions</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('View profile clicked')}>View profile</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Activate clicked')}>Activate</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Deactivate clicked')}>Deactivate</button>
-                              <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={() => console.log('Remove clicked')}>Remove</button>
-                            </div>
-                          )}
-                          
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </main>
       </div>
       {/* Off-canvas sidebar */}
       <div className={`fixed top-0 right-0 w-64 mt-28 h-full bg-white shadow-lg transform ${offCanvasOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300`}>
@@ -272,40 +330,95 @@ const Managemain = () => {
           </button>
         </div>
         <div className="p-4 ">
-          {/* Form contents go here */}
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">First Name</label>
-              <input type="text" className="mt-1 p-2 block w-full border rounded-md" />
+              <input 
+                type="text" 
+                name="firstName" 
+                value={formData.firstName} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Last Name</label>
-              <input type="text" className="mt-1 p-2 block w-full border rounded-md" />
+              <input 
+                type="text" 
+                name="lastName" 
+                value={formData.lastName} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input type="email" className="mt-1 p-2 block w-full border rounded-md" />
+              <input 
+                type="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-              <input type="email" className="mt-1 p-2 block w-full border rounded-md" />
+              <input 
+                type="tel" 
+                name="phoneNumber" 
+                value={formData.phoneNumber} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Password</label>
-              <input type="email" className="mt-1 p-2 block w-full border rounded-md" />
+              <input 
+                type="password" 
+                name="password" 
+                value={formData.password} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700"> Confirm Password</label>
-              <input type="email" className="mt-1 p-2 block w-full border rounded-md" />
+              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input 
+                type="password" 
+                name="confirmPassword" 
+                value={formData.confirmPassword} 
+                onChange={handleInputChange} 
+                className="mt-1 p-2 block w-full border rounded-md" 
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700"> Group Membership</label>
-              <input type="checkbox" className="mt-1 p-2 block w-full border rounded-md" />
+              <label className="block text-sm font-medium text-gray-700">Group Membership</label>
+              <input
+                type="text"
+                value={groupSearchTerm}
+                onChange={handleGroupSearch}
+                className="mt-1 p-2 block w-full border rounded-md"
+              />
+              {groupSuggestions.length > 0 && (
+                <ul className="absolute z-10 mt-2 w-full bg-white border rounded shadow-lg max-h-48 overflow-auto">
+                  {groupSuggestions.map((group, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleUserSelect(group)}
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    >
+                      {group.groupName}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {selectedGroupName && (
+                <div className="mt-2 text-sm text-gray-600">
+                  Selected Group: <span className="font-medium">{selectedGroupName}</span>
+                </div>
+              )}
             </div>
-
-            <div className="flex justify-end">
-              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md">Save</button>
-            </div>
+            <button type="submit" className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md">Submit</button>
           </form>
         </div>
       </div>
