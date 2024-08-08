@@ -5,6 +5,8 @@ import axios from 'axios';
 import ForgotPasswordModal from './ForgotModalOne';
 import './Login.css';
 import Cookies from 'js-cookie';
+import { toast, ToastContainer } from 'react-toastify'; // Import react-toastify components
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 const Login_main = () => {
   const [showModal, setShowModal] = useState(false);
@@ -87,19 +89,19 @@ const Login_main = () => {
       const data = { email, password };
       const response = await axios.post('http://localhost:3000/sms/login', data);
       
-      const { token, role,id } = response.data;
-      Cookies.set('authToken', token, { expires: 1 }); // Cookie will expire in 1 day
-      Cookies.set('userRole', role, { expires: 1 }); // Store user role in a cookie
-      Cookies.set('userId', id, { expires: 1 }); // Store user role in a cookie
+      const { token, decodedToken } = response.data;
       
+      Cookies.set('role', decodedToken.role, { expires: 1 }); // Cookie will expire in 1 day
+      Cookies.set('userId', decodedToken.id, { expires: 1 }); // Cookie will expire in 1 day
+      Cookies.set('authToken', token, { expires: 1 });
       
-      alert(response.data.message); // Display success message
+      toast.success(response.data.message); // Display success message
       navigate('/dashboard');
     } catch (error) {
       if (error.response) {
-        alert(error.response.data); // Display error message from server
+        toast.error(error.response.data); // Display error message from server
       } else {
-        alert('Login failed. Please try again.');
+        toast.error('Login failed. Please try again.');
       }
     }
   };
@@ -132,6 +134,7 @@ const Login_main = () => {
           <ForgotPasswordModal showModal={showModal} setShowModal={setShowModal} />
         </div>
       </div>
+      <ToastContainer /> {/* Add ToastContainer for toasts */}
     </div>
   );
 };

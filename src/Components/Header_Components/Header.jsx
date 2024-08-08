@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaBars, FaBell, FaSearch, FaTimes } from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
-import gsap from 'gsap';
-
+import React, { useState, useEffect, useRef } from "react";
+import { FaBars, FaBell, FaSearch, FaTimes } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import gsap from "gsap";
+import Cookies from "js-cookie";
 
 const Header = ({ toggleSidebar }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [searchOpen, setSearchOpen] = useState(window.innerWidth >= 1280);
   const location = useLocation();
   const headerRef = useRef(null);
   const searchRef = useRef(null);
   const avatarRef = useRef(null);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,14 +19,19 @@ const Header = ({ toggleSidebar }) => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
     gsap.from(headerRef.current, { opacity: 0, y: -50, duration: 1 });
-    gsap.from(searchRef.current, { opacity: 0, scale: 0, duration: 1, delay: 0.5 });
+    gsap.from(searchRef.current, {
+      opacity: 0,
+      scale: 0,
+      duration: 1,
+      delay: 0.5,
+    });
     gsap.from(avatarRef.current, { opacity: 0, x: 50, duration: 1, delay: 1 });
   }, []);
 
@@ -40,13 +44,21 @@ const Header = ({ toggleSidebar }) => {
     }
   };
 
-
   const isActive = (path) => {
     return location.pathname === path;
   };
 
+  const handleLogout = () => {
+    // Remove cookies
+    Cookies.remove("authToken");
+    Cookies.remove("role");
+    Cookies.remove("userId")
+    // Redirect or handle additional logout actions here
+    window.location.href = "/"; // Example redirect to login page
+  };
+
   return (
-    <header className="flex items-center justify-between h-16 p-4 bg-[#00274D] text-orange shadow-lg">
+    <header className="flex items-center justify-between h-16 p-4 bg-[#00274D] text-orange shadow-lg" ref={headerRef}>
       <button className="text-white md:hidden" onClick={toggleSidebar}>
         <FaBars />
       </button>
@@ -60,7 +72,7 @@ const Header = ({ toggleSidebar }) => {
           )}
           <div
             className={`relative flex items-center transition-all duration-300 ease-in-out ${
-              searchOpen ? 'w-60 md:w-52 lg:w-96 xl:w-full' : 'w-0'
+              searchOpen ? "w-60 md:w-52 lg:w-96 xl:w-full" : "w-0"
             }`}
           >
             <FaSearch className="absolute left-3 top-2.5 text-black" />
@@ -69,15 +81,15 @@ const Header = ({ toggleSidebar }) => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className={`h-9 rounded-lg text-black pl-10 pr-10 ${
-                searchOpen ? 'w-full' : 'w-0'
+                searchOpen ? "w-full" : "w-0"
               }`}
               placeholder="Search"
-              style={{ visibility: searchOpen ? 'visible' : 'hidden' }}
+              style={{ visibility: searchOpen ? "visible" : "hidden" }}
             />
             {searchValue && (
               <FaTimes
                 className="absolute right-3 top-2.5 text-black cursor-pointer"
-                onClick={() => setSearchValue('')}
+                onClick={() => setSearchValue("")}
               />
             )}
           </div>
@@ -92,16 +104,23 @@ const Header = ({ toggleSidebar }) => {
         <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
           <FaBell className="text-gray-300" />
-          <div className="flex items-center space-x-2"  ref={avatarRef}>
+          <div className="flex items-center space-x-2" ref={avatarRef}>
             <img
               src="https://res.cloudinary.com/defsu5bfc/image/upload/v1714828410/logo_3_jizb6b.png"
               alt="User avatar"
               className="w-12 rounded-full"
             />
-            <div className="text-white">
-              <span className="hidden md:block">QubicGen</span>
-              <span className="text-sm text-gray-300 hidden md:block">Admin</span>
-            </div>
+            <select
+              className="bg-[#00274D] text-white hidden md:block md:w-28 lg:w-28 h-9 rounded-lg"
+              onChange={(e) => {
+                if (e.target.value === "logout") {
+                  handleLogout();
+                }
+              }}
+            >
+              <option value="settings">Settings</option>
+              <option value="logout" onClick={handleLogout}>Logout</option>
+            </select>
           </div>
         </div>
       </div>

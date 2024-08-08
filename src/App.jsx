@@ -20,39 +20,37 @@ import Assignrolesuser from "./Components/Access Management/Assignrolesuser";
 import Addgroup from "./Components/Access Management/Addgroup";
 import Managemain from "./Components/Manage Accounts/Managemain";
 import ManageGroups from "./Components/Manage Accounts/ManageGroups";
-
+import ProtectedRoute from "./config/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login_main />} />
-        <Route path="/setup" element={<Setup />} />
-        <Route path="/setuptwo" element={<Setup_two />} />
-        <Route path="/setupconfirmation" element={<SetupConfirmation />} />
-        <Route path="/ordersummmary" element={<OrderSummary />} />
-        <Route path="/final" element={<Final />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/enrolements" element={<Enrolements />} />
-        <Route path="/studentenrollment" element={<StudentEnrollment />} />
-        <Route path="/teacherenrollment" element={<TeacherEnrollment />} />
-        <Route path="/user-management" element={<Accessmanagement />} />
-        <Route path="/manageroles" element={<Manageroles/>} />
-        <Route path="/roles" element={<Roles/>} />
-        <Route path="/editactions" element={<Editaction/>} />
-        <Route path="/newroles" element={<NewRoles/>} />
-        <Route path="/adduser" element={<Assignrolesuser/>} />
-        <Route path="/addgroup" element={<Addgroup/>} />
-        <Route path="/managemain" element={<Managemain/>} />
-        <Route path="/managegroups" element={<ManageGroups/>} />
-       
-        
-        
-
-      </Routes>
-    </BrowserRouter>
+ <>
+    <ToastContainer/>
+       <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Login_main />} />
+      <Route path="/setup" element={<ProtectedRoute element={<Setup />}/>} />
+      <Route path="/setuptwo" element={<ProtectedRoute element={<Setup_two />}/>} />
+      <Route path="/setupconfirmation" element={<ProtectedRoute  element={<SetupConfirmation />}/>} />
+      <Route path="/ordersummmary" element={<ProtectedRoute element={<OrderSummary />}/>} />
+      <Route path="/final" element={<ProtectedRoute element={<Final />}/>} />
+      <Route path="/dashboard"  element={<ProtectedRoute element={<Dashboard />} />}/>
+      <Route path="/enrolements" element={<ProtectedRoute element={<Enrolements />}/>} />
+      <Route path="/studentenrollment" element={<ProtectedRoute element={<StudentEnrollment />}/>} />
+      <Route path="/teacherenrollment" element={<ProtectedRoute element={<TeacherEnrollment />}/>} />
+      <Route path="/user-management" element={<ProtectedRoute element={<Accessmanagement />} />}/>
+      <Route path="/manageroles" element={<ProtectedRoute  element={<Manageroles/>}/>} />
+      <Route path="/roles" element={<ProtectedRoute element={<Roles/>}/>} />
+      <Route path="/editactions"  element={<ProtectedRoute element={<Editaction/>}/>} />
+      <Route path="/newroles"  element={<ProtectedRoute element={<NewRoles/>}/>} />
+      <Route path="/adduser" element={<ProtectedRoute element={<Assignrolesuser/>}/>} />
+      <Route path="/addgroup" element={<ProtectedRoute element={<Addgroup/>}/>} />
+      <Route path="/managemain" element={<ProtectedRoute element={<Managemain/>}/>} />
+      <Route path="/managegroups" element={<ProtectedRoute element={<ManageGroups/>}/>} />
+    </Routes>
+  </BrowserRouter>
+ </>
   );
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
