@@ -134,7 +134,7 @@ const Login_main = () => {
           <ForgotPasswordModal showModal={showModal} setShowModal={setShowModal} />
         </div>
       </div>
-      <ToastContainer /> {/* Add ToastContainer for toasts */}
+     
     </div>
   );
 };

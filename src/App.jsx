@@ -28,7 +28,7 @@ export default function App() {
   return (
  <>
     <ToastContainer/>
-       <BrowserRouter>
+    <BrowserRouter>
     <Routes>
       <Route path="/" element={<Login_main />} />
       <Route path="/setup" element={<ProtectedRoute element={<Setup />}/>} />
